@@ -328,7 +328,7 @@ export interface SvapiPreSign4UploadResponse {
    * 文件id
    *  @gotags: json:"file_id,omitempty,string"
    */
-  fileId?: string;
+  file_id?: string;
 }
 
 /**
