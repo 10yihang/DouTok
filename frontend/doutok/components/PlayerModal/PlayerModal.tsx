@@ -1,3 +1,5 @@
+"use client";
+
 import { Player } from "@/components/Player/Player";
 import { SvapiVideo } from "@/api/svapi/api";
 import * as React from "react";
@@ -61,10 +63,13 @@ export function CorePlayerModal(props: PlayerModalProps) {
           userId={videoInfo.author?.id}
           isCouldFollow={currentUserId !== videoInfo.author?.id}
           videoInfo={videoInfo}
+          displaying={props.open || false}
           useExternalCommentDrawer={true}
           onOpenExternalCommentDrawer={() => {
             setOpenCommentDrawer(!openCommentDrawer);
           }}
+          onPreviousVideo={props.onLastOne}
+          onNextVideo={props.onNextOne}
         />
         <FloatButton
           icon={<RightOutlined />}

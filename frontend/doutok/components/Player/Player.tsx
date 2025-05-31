@@ -39,9 +39,10 @@ const CustomPlyrInstance = React.forwardRef<APITypes, PlyrProps>(
       options
     }) as React.MutableRefObject<HTMLVideoElement>;
 
-    useEffect(() => {
-      raptorRef.current.play();
-    }, []);
+    // 暴露plyr实例到父组件
+    React.useImperativeHandle(ref, () => ({
+      plyr: (raptorRef.current as any)?.plyr
+    }));
 
     return <video ref={raptorRef} className="plyr-react plyr" />;
   }
@@ -54,7 +55,7 @@ interface CorePlayerProps {
   src: string;
 }
 
-const CorePlayer = (props: CorePlayerProps, ref) => {
+const CorePlayer = (props: CorePlayerProps, ref: any) => {
   return (
     <CustomPlyrInstance
       ref={ref}
@@ -65,10 +66,10 @@ const CorePlayer = (props: CorePlayerProps, ref) => {
           props.sources !== undefined
             ? props.sources
             : [
-                {
-                  src: props.src
-                }
-              ]
+              {
+                src: props.src
+              }
+            ]
       }}
       options={{
         ratio: "16:9",
@@ -94,6 +95,8 @@ export interface PlayerProps {
   displaying: boolean;
   useExternalCommentDrawer: boolean;
   onOpenExternalCommentDrawer?: () => void;
+  onPreviousVideo?: () => void;
+  onNextVideo?: () => void;
 }
 
 // 保留注释，未来会优化播放器组件
@@ -122,7 +125,101 @@ export function Player(props: PlayerProps) {
     setIsFollowed(props.videoInfo.author?.isFollowing === true);
     setIsCollected(props.videoInfo.isCollected === true);
     setIsFavorite(props.videoInfo.isFavorite === true);
-  }, [props.isCouldFollow, props.videoInfo]);
+  }, [props.isCouldFollow, props.videoInfo]);  // 键盘事件监听，支持w/s键、上下方向键切换视频和空格键暂停/播放
+  useEffect(() => {
+    // 检查是否在客户端环境
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      // 只在当前视频显示时处理键盘事件
+      if (!props.displaying) {
+        return;
+      }
+
+      // 检查是否在输入框中，如果是则不处理键盘事件
+      const target = event.target as HTMLElement;
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.contentEditable === 'true') {
+        return;
+      }
+
+      switch (event.key) {
+        case 'w':
+        case 'W':
+        case 'ArrowUp':
+          event.preventDefault();
+          props.onPreviousVideo?.();
+          break;
+        case 's':
+        case 'S':
+        case 'ArrowDown':
+          event.preventDefault();
+          props.onNextVideo?.();
+          break;
+        case ' ':
+          event.preventDefault();
+          // 获取当前plyr实例并切换播放状态
+          const currentPlayer = (playerRef.current as any)?.plyr;
+          if (currentPlayer) {
+            if (currentPlayer.playing) {
+              currentPlayer.pause();
+            } else {
+              currentPlayer.play();
+            }
+          }
+          break;
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [props.displaying, props.onPreviousVideo, props.onNextVideo]);
+  // 处理视频切换时停止旧视频播放
+  useEffect(() => {
+    const currentPlayer = (playerRef.current as any)?.plyr;
+
+    if (currentPlayer) {
+      if (props.displaying) {
+        // 当视频变为显示状态时，确保其他视频都已停止
+        // 这里我们不自动播放，让用户决定是否播放
+      } else {
+        // 当视频变为非显示状态时，立即停止播放
+        try {
+          if (currentPlayer.playing) {
+            currentPlayer.pause();
+          }
+          // 重置播放位置到开始
+          currentPlayer.currentTime = 0;
+          // 确保视频完全停止
+          currentPlayer.stop();
+        } catch (error) {
+          // 忽略可能的错误，例如视频尚未加载完成
+          console.warn('Error stopping video:', error);
+        }
+      }
+    }
+  }, [props.displaying, props.src]);
+
+  // 添加一个清理函数，确保组件卸载时停止视频
+  useEffect(() => {
+    return () => {
+      const currentPlayer = (playerRef.current as any)?.plyr;
+      if (currentPlayer) {
+        try {
+          if (currentPlayer.playing) {
+            currentPlayer.pause();
+          }
+          currentPlayer.currentTime = 0;
+          currentPlayer.stop();
+        } catch (error) {
+          console.warn('Error cleaning up video:', error);
+        }
+      }
+    };
+  }, []);
 
   const addFollowMutate = useFollowServiceAddFollow({});
   const addFollowHandle = () => {
@@ -238,11 +335,11 @@ export function Player(props: PlayerProps) {
       style={
         !haveSource
           ? {
-              position: "absolute",
-              top: "-100%",
-              left: "-100%",
-              opacity: 0
-            }
+            position: "absolute",
+            top: "-100%",
+            left: "-100%",
+            opacity: 0
+          }
           : {}
       }
     >

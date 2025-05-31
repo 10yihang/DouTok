@@ -606,7 +606,7 @@ export interface SvapiVideo {
    */
   id?: string;
   author?: SvapiVideoAuthor;
-  playUrl?: string;
+  play_url?: string;
   coverUrl?: string;
   /**
    * @gotags: json:"favoriteCount,omitempty,string"

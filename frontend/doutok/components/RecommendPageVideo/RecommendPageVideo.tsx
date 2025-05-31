@@ -1,3 +1,5 @@
+"use client";
+
 import { Player } from "@/components/Player/Player";
 import { SvapiVideo } from "@/api/svapi/api";
 import { FloatButton, message } from "antd";
@@ -30,65 +32,68 @@ export function RecommendPageVideo(props: RecommendPageVideoProps) {
     setData(props.data || []);
   }, [props.data]);
 
+  const handlePreviousVideo = () => {
+    if (current === 0) {
+      message.info("已经是第一个了");
+      return;
+    }
+    setCurrent(current - 1);
+  };
+
+  const handleNextVideo = () => {
+    if (current === data.length - 2) {
+      props.loadData();
+    }
+
+    if (current === data.length - 1) {
+      message.info("已经是最后一个了");
+      return;
+    }
+
+    setCurrent(current + 1);
+  };
+
   return (
-    <div>
-      <FloatButton.Group shape={"square"}>
+    <div>      <FloatButton.Group shape={"square"}>
+      <FloatButton
+        icon={<UpOutlined />}
+        tooltip={"上一个视频"}
+        onClick={handlePreviousVideo}
+      />
+      <FloatButton
+        icon={<DownOutlined />}
+        tooltip={"下一个视频"}
+        onClick={handleNextVideo}
+      />
+      {props.couldCancel && (
         <FloatButton
-          icon={<UpOutlined />}
-          tooltip={"上一个视频"}
+          icon={<CloseOutlined />}
+          tooltip={"关闭"}
           onClick={() => {
-            if (current === 0) {
-              message.info("已经是第一个了");
-              return;
-            }
-
-            setCurrent(current - 1);
+            props.onCancel?.();
           }}
         />
-        <FloatButton
-          icon={<DownOutlined />}
-          tooltip={"下一个视频"}
-          onClick={() => {
-            if (current === data.length - 2) {
-              props.loadData();
-            }
-
-            if (current === data.length - 1) {
-              message.info("已经是最后一个了");
-              return;
-            }
-
-            setCurrent(current + 1);
-          }}
-        />
-        {props.couldCancel && (
-          <FloatButton
-            icon={<CloseOutlined />}
-            tooltip={"关闭"}
-            onClick={() => {
-              props.onCancel?.();
-            }}
-          />
-        )}
-      </FloatButton.Group>
+      )}
+    </FloatButton.Group>
       {data.map((item: SvapiVideo, index: number) => (
         <div
           key={index}
           style={{
             display: current === index ? "block" : "none"
           }}
-        >
-          <Player
+        >          <Player
             src={"http://10.255.253.63:9000/shortvideo/" + item.play_url}
             avatar={"http://10.255.253.63:9000/shortvideo/" + item.author?.avatar}
             username={item.author?.name}
             description={item.title}
             title={"test"}
-            userId={item.author?.id}
+            userId={item.author?.id || ""}
             isCouldFollow={currentUserId !== item.author?.id}
             videoInfo={item}
             displaying={current === index}
             useExternalCommentDrawer={false}
+            onPreviousVideo={handlePreviousVideo}
+            onNextVideo={handleNextVideo}
           />
         </div>
       ))}

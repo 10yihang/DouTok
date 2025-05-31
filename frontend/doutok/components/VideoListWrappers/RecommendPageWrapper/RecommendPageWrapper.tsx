@@ -1,3 +1,5 @@
+"use client";
+
 import { RecommendPageVideo } from "@/components/RecommendPageVideo/RecommendPageVideo";
 import React, { useEffect } from "react";
 import {
