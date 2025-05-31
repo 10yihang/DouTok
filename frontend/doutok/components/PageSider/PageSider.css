@@ -1,0 +1,13 @@
+#page-sider {
+  min-height: 93.3vh;
+}
+
+#sider-menu {
+  min-height: 100%;
+  background: linear-gradient(250deg, #363741 70%, #e12056);
+}
+
+.ant-menu-item-selected {
+  background: transparent !important;
+  border: #14f1da 1px solid;
+}

@@ -1,0 +1,121 @@
+version: '3'
+
+networks:
+  total:
+    driver: bridge
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    env_file:
+      - ./mysql/.env
+    networks:
+      - total
+    volumes:
+        - ./mysql_data:/var/lib/mysql:rw
+        - ./mysql/my.cnf:/etc/mysql/my.cnf
+    ports:
+        - "3306:3306"
+    restart: always
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-proot"]
+      timeout: 20s
+      retries: 10
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    command: redis-server /etc/redis/redis.conf
+    networks:
+      - total
+    volumes:
+      - ./redis_data:/data
+      - ./redis/redis.conf:/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    restart: always
+    healthcheck:
+      test: ["CMD", "redis-cli", "--raw", "incr", "ping"]
+      timeout: 3s
+      retries: 5
+
+  etcd:
+    image: bitnami/etcd
+    container_name: etcd
+    networks:
+      - total
+    environment:
+      - ALLOW_NONE_AUTHENTICATION=yes
+      - ETCD_NAME=etcd
+      - ETCD_ADVERTISE_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_LISTEN_CLIENT_URLS=http://0.0.0.0:2379
+      - ETCD_LISTEN_PEER_URLS=http://0.0.0.0:2380
+    ports:
+      - "2379:2379"
+      - "2380:2380"
+    restart: always
+
+  minio:
+    image: minio/minio:latest
+    container_name: minio
+    command: server --console-address ':9001' /data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      MINIO_ACCESS_KEY: root
+      MINIO_SECRET_KEY: rootroot
+    volumes:
+      - ./minio_data:/data
+      - ./minio:/root/.minio
+    networks:
+      - total
+    privileged: true
+    restart: always
+
+  consul:
+    container_name: consul
+    image: hashicorp/consul:1.15.4
+    networks:
+      - total
+    ports:
+      - "8500:8500"
+    volumes:
+      - ./consul_data:/consul/data
+    command: ["consul","agent","-server","-bootstrap-expect=1","-data-dir","/consul","-ui","-client","0.0.0.0"]
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "5775:5775/udp" # Zipkin 端口
+      - "6831:6831/udp" # Jaeger agent 端口
+      - "6832:6832/udp" # Thrift 端口
+      - "5778:5778" # Config 服务端口
+      - "16686:16686" # Jaeger UI 端口
+      - "14268:14268" # HTTP 端口
+      - "9411:9411" # Zipkin HTTP 端口
+    environment:
+      COLLECTOR_ZIPKIN_HTTP_PORT: 9411
+
+  gorse:
+    image: zhenghaoz/gorse-in-one:latest
+    container_name: gorse
+    restart: unless-stopped
+    networks:
+      - total
+    ports:
+      - 8086:8086   # gRPC port
+      - 8088:8088   # HTTP port
+    command: >
+      -c /etc/gorse/config.toml
+      --log-path /var/log/gorse/master.log
+      --cache-path /var/lib/gorse/master_cache.data
+    volumes:
+      # Mount the configuration file.
+      - ./gorse/config.toml:/etc/gorse/config.toml
+    depends_on:
+      redis:
+        condition: service_healthy
+      mysql:
+        condition: service_healthy

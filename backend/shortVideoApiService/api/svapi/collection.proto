@@ -1,0 +1,151 @@
+syntax = "proto3";
+
+package svapi;
+
+option go_package = "github.com/cloudzenith/DouTok/...;svapi";
+
+import "google/api/annotations.proto";
+import "buf/validate/validate.proto";
+import "svapi/base.proto";
+
+message Collection {
+    // @gotags: json:"id,omitempty,string"
+    int64 id = 1; // 收藏夹id
+    // @gotags: json:"userId,omitempty,string"
+    int64 user_id = 2; // 用户id
+    string name = 3; // 收藏夹名称
+    string description = 4; // 收藏夹描述
+}
+
+message CollectionVideo {
+    // @gotags: json:"id,omitempty,string"
+    int64 id = 1; // 收藏夹id
+    // @gotags: json:"videoId,omitempty,string"
+    int64 video_id = 2; // 视频id
+    string cover_url = 3; // 视频封面地址
+    string title = 4; // 视频标题
+    string description = 5; // 视频描述
+    string video_url = 6; // 视频地址
+}
+
+// 收藏夹服务
+service CollectionService {
+    // 创建收藏夹
+    rpc CreateCollection(CreateCollectionRequest) returns (CreateCollectionResponse) {
+        option (google.api.http) = {
+            post: "/collection"
+            body: "*"
+        };
+    };
+
+    // 删除收藏夹
+    rpc RemoveCollection(RemoveCollectionRequest) returns (RemoveCollectionResponse) {
+        option (google.api.http) = {
+            delete: "/collection"
+            body: "*"
+        };
+    };
+
+    // 列出用户的收藏夹
+    rpc ListCollection(ListCollectionRequest) returns (ListCollectionResponse) {
+        option (google.api.http) = {
+            get: "/collection"
+        };
+    };
+
+    // 更新收藏夹信息
+    rpc UpdateCollection(UpdateCollectionRequest) returns (UpdateCollectionResponse) {
+        option (google.api.http) = {
+            put: "/collection"
+            body: "*"
+        };
+    };
+
+    // 将视频添加到收藏夹
+    rpc AddVideo2Collection(AddVideo2CollectionRequest) returns (AddVideo2CollectionResponse) {
+        option (google.api.http) = {
+            post: "/collection/video"
+            body: "*"
+        };
+    };
+
+    // 从收藏夹中移除视频
+    rpc RemoveVideoFromCollection(RemoveVideoFromCollectionRequest) returns (RemoveVideoFromCollectionResponse) {
+        option (google.api.http) = {
+            delete: "/collection/video"
+            body: "*"
+        };
+    };
+
+    // 列出收藏夹中的视频
+    rpc ListVideo4Collection(ListVideo4CollectionRequest) returns (ListVideo4CollectionResponse) {
+        option (google.api.http) = {
+            get: "/collection/video"
+        };
+    };
+}
+
+message CreateCollectionRequest {
+    string name = 1; // 收藏夹名称
+    string description = 2; // 收藏夹描述
+}
+
+message CreateCollectionResponse {
+    Collection collection = 1;
+}
+
+message RemoveCollectionRequest {
+    // @gotags: json:"id,omitempty,string"
+    int64 id = 1; // 收藏夹id
+}
+
+message RemoveCollectionResponse {}
+
+message ListCollectionRequest {
+    PaginationRequest pagination = 1;
+}
+
+message ListCollectionResponse {
+    repeated Collection collections = 1;
+    PaginationResponse pagination = 2;
+}
+
+message UpdateCollectionRequest {
+    // @gotags: json:"id,omitempty,string"
+    int64 id = 1; // 收藏夹id
+    string name = 2; // 收藏夹名称
+    string description = 3; // 收藏夹描述
+}
+
+message UpdateCollectionResponse {
+    Collection collection = 1;
+}
+
+message AddVideo2CollectionRequest {
+    // @gotags: json:"collectionId,omitempty,string"
+    int64 collection_id = 1; // 收藏夹id，不传则添加到默认收藏夹
+    // @gotags: json:"videoId,omitempty,string"
+    int64 video_id = 2; // 视频id
+}
+
+message AddVideo2CollectionResponse {}
+
+message RemoveVideoFromCollectionRequest {
+    // @gotags: json:"collectionId,omitempty,string"
+    int64 collection_id = 1; // 收藏夹id
+    // @gotags: json:"videoId,omitempty,string"
+    int64 video_id = 2; // 视频id
+}
+
+message RemoveVideoFromCollectionResponse {}
+
+message ListVideo4CollectionRequest {
+    // @gotags: json:"collectionId,omitempty,string"
+    int64 collection_id = 1; // 收藏夹id
+    PaginationRequest pagination = 2;
+}
+
+message ListVideo4CollectionResponse {
+    repeated Video videos = 1;
+    PaginationResponse pagination = 2;
+}

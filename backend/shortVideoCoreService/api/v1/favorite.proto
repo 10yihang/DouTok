@@ -1,0 +1,111 @@
+syntax = "proto3";
+
+package shortVideoCoreService.api.v1;
+
+option go_package = "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1;v1";
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+import "v1/base.proto";
+
+service FavoriteService {
+    rpc AddFavorite(AddFavoriteRequest) returns (AddFavoriteResponse);
+    rpc RemoveFavorite(RemoveFavoriteRequest) returns (RemoveFavoriteResponse);
+    rpc ListFavorite(ListFavoriteRequest) returns (ListFavoriteResponse);
+    rpc CountFavorite(CountFavoriteRequest) returns (CountFavoriteResponse);
+    rpc IsFavorite(IsFavoriteRequest) returns (IsFavoriteResponse);
+}
+
+enum FavoriteTarget {
+    VIDEO = 0;
+    COMMENT = 1;
+}
+
+enum FavoriteType {
+    FAVORITE = 0; // 点赞
+    UNLIKE = 1; // 点踩
+}
+
+enum FavoriteAggregateType {
+    BY_VIDEO = 0;
+    BY_COMMENT = 1;
+    BY_USER = 2;
+}
+
+message AddFavoriteRequest {
+    FavoriteTarget target = 1;
+    FavoriteType type = 2;
+    // @gotags: json:"id,omitempty,string"
+    int64 id = 3;
+    int64 user_id = 4;
+}
+
+message AddFavoriteResponse {
+    Metadata meta = 1;
+}
+
+message RemoveFavoriteRequest {
+    FavoriteTarget target = 1;
+    FavoriteType type = 2;
+    // @gotags: json:"id,omitempty,string"
+    int64 id = 3;
+    int64 user_id = 4;
+}
+
+message RemoveFavoriteResponse {
+    Metadata meta = 1;
+}
+
+message ListFavoriteRequest {
+    FavoriteAggregateType aggregate_type = 1;
+    int64 id = 2;
+    PaginationRequest pagination = 3;
+    FavoriteType favorite_type = 4;
+}
+
+message ListFavoriteResponse {
+    Metadata meta = 1;
+    repeated int64 biz_id = 2;
+    PaginationResponse pagination = 3;
+}
+
+message CountFavoriteRequest {
+    FavoriteAggregateType aggregate_type = 1;
+    repeated int64 id = 2;
+    FavoriteType favorite_type = 4;
+}
+
+message CountFavoriteResponseItem {
+    int64 biz_id = 1;
+    int64 count = 2;
+}
+
+message CountFavoriteResponse {
+    Metadata meta = 1;
+    repeated CountFavoriteResponseItem items = 2;
+}
+
+message IsFavoriteRequestItem {
+    int64 biz_id = 3;
+    int64 user_id = 4;
+}
+
+message IsFavoriteRequest {
+    FavoriteTarget target = 1;
+    FavoriteType type = 2;
+    int64 biz_id = 3;
+    int64 user_id = 4;
+    repeated IsFavoriteRequestItem items = 5;
+}
+
+message IsFavoriteResponseItem {
+    int64 biz_id = 1;
+    int64 user_id = 2;
+    bool is_favorite = 3;
+}
+
+message IsFavoriteResponse {
+    Metadata meta = 1;
+    bool is_favorite = 2;
+    repeated IsFavoriteResponseItem result = 3;
+}

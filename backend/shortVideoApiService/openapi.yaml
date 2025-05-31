@@ -1,0 +1,1608 @@
+# Generated with protoc-gen-openapi
+# https://github.com/google/gnostic/tree/master/cmd/protoc-gen-openapi
+
+openapi: 3.0.3
+info:
+    title: ""
+    version: 0.0.1
+paths:
+    /collection:
+        get:
+            tags:
+                - CollectionService
+            description: 列出用户的收藏夹
+            operationId: CollectionService_ListCollection
+            parameters:
+                - name: pagination.page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pagination.size
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ListCollectionResponse'
+        put:
+            tags:
+                - CollectionService
+            description: 更新收藏夹信息
+            operationId: CollectionService_UpdateCollection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.UpdateCollectionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.UpdateCollectionResponse'
+        post:
+            tags:
+                - CollectionService
+            description: 创建收藏夹
+            operationId: CollectionService_CreateCollection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.CreateCollectionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.CreateCollectionResponse'
+        delete:
+            tags:
+                - CollectionService
+            description: 删除收藏夹
+            operationId: CollectionService_RemoveCollection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.RemoveCollectionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.RemoveCollectionResponse'
+    /collection/video:
+        get:
+            tags:
+                - CollectionService
+            description: 列出收藏夹中的视频
+            operationId: CollectionService_ListVideo4Collection
+            parameters:
+                - name: collectionId
+                  in: query
+                  description: '@gotags: json:"collectionId,omitempty,string"'
+                  schema:
+                    type: string
+                - name: pagination.page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pagination.size
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ListVideo4CollectionResponse'
+        post:
+            tags:
+                - CollectionService
+            description: 将视频添加到收藏夹
+            operationId: CollectionService_AddVideo2Collection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.AddVideo2CollectionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.AddVideo2CollectionResponse'
+        delete:
+            tags:
+                - CollectionService
+            description: 从收藏夹中移除视频
+            operationId: CollectionService_RemoveVideoFromCollection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.RemoveVideoFromCollectionRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.RemoveVideoFromCollectionResponse'
+    /comment:
+        post:
+            tags:
+                - CommentService
+            description: 创建评论
+            operationId: CommentService_CreateComment
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.CreateCommentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.CreateCommentResponse'
+        delete:
+            tags:
+                - CommentService
+            description: 删除评论
+            operationId: CommentService_RemoveComment
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.RemoveCommentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.RemoveCommentResponse'
+    /comment/child:
+        post:
+            tags:
+                - CommentService
+            operationId: CommentService_ListChildComment
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.ListChildCommentRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ListChildCommentResponse'
+    /comment/video:
+        post:
+            tags:
+                - CommentService
+            description: 列出视频的评论
+            operationId: CommentService_ListComment4Video
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.ListComment4VideoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ListComment4VideoResponse'
+    /cover/upload:
+        post:
+            tags:
+                - ShortVideoCoreVideoService
+            description: 预注册上传封面
+            operationId: ShortVideoCoreVideoService_PreSign4UploadCover
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.PreSign4UploadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.PreSign4UploadResponse'
+    /favorite:
+        post:
+            tags:
+                - FavoriteService
+            operationId: FavoriteService_AddFavorite
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.AddFavoriteRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.AddFavoriteResponse'
+        delete:
+            tags:
+                - FavoriteService
+            operationId: FavoriteService_RemoveFavorite
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.RemoveFavoriteRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.RemoveFavoriteResponse'
+    /favorite/video/list:
+        post:
+            tags:
+                - FavoriteService
+            operationId: FavoriteService_ListFavoriteVideo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.ListFavoriteVideoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ListFavoriteVideoResponse'
+    /file/{fileId}/finish:
+        post:
+            tags:
+                - ShortVideoCoreVideoService
+            description: 通用确认上传完成
+            operationId: ShortVideoCoreVideoService_ReportFinishUpload
+            parameters:
+                - name: fileId
+                  in: path
+                  description: |-
+                    文件id
+                     @gotags: json:"file_id,omitempty,string"
+                  required: true
+                  schema:
+                    type: string
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.ReportFinishUploadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ReportFinishUploadResponse'
+    /follow:
+        get:
+            tags:
+                - FollowService
+            operationId: FollowService_ListFollowing
+            parameters:
+                - name: userId
+                  in: query
+                  description: '@gotags: json:"userId,omitempty,string"'
+                  schema:
+                    type: string
+                - name: type
+                  in: query
+                  schema:
+                    type: integer
+                    format: enum
+                - name: pagination.page
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+                - name: pagination.size
+                  in: query
+                  schema:
+                    type: integer
+                    format: int32
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ListFollowingResponse'
+        post:
+            tags:
+                - FollowService
+            operationId: FollowService_AddFollow
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.AddFollowRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.AddFollowResponse'
+        delete:
+            tags:
+                - FollowService
+            operationId: FollowService_RemoveFollow
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.RemoveFollowRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.RemoveFollowResponse'
+    /user/code:
+        post:
+            tags:
+                - UserService
+            description: 获取验证码
+            operationId: UserService_GetVerificationCode
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.GetVerificationCodeRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.GetVerificationCodeResponse'
+    /user/info:
+        get:
+            tags:
+                - UserService
+            description: 获取用户信息
+            operationId: UserService_GetUserInfo
+            parameters:
+                - name: userId
+                  in: query
+                  description: '@gotags: json:"user_id,omitempty,string"'
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.GetUserInfoResponse'
+        put:
+            tags:
+                - UserService
+            description: 更新用户信息
+            operationId: UserService_UpdateUserInfo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.UpdateUserInfoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.UpdateUserInfoResponse'
+    /user/login:
+        post:
+            tags:
+                - UserService
+            description: 登录
+            operationId: UserService_Login
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.LoginRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.LoginResponse'
+    /user/register:
+        post:
+            tags:
+                - UserService
+            description: 注册
+            operationId: UserService_Register
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.RegisterRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.RegisterResponse'
+    /user/voucher:
+        post:
+            tags:
+                - UserService
+            operationId: UserService_BindUserVoucher
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.BindUserVoucherRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.BindUserVoucherResponse'
+        delete:
+            tags:
+                - UserService
+            operationId: UserService_UnbindUserVoucher
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.UnbindUserVoucherRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.UnbindUserVoucherResponse'
+    /video/feed:
+        post:
+            tags:
+                - ShortVideoCoreVideoService
+            description: 刷视频
+            operationId: ShortVideoCoreVideoService_FeedShortVideo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.FeedShortVideoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.FeedShortVideoResponse'
+    /video/finish:
+        post:
+            tags:
+                - ShortVideoCoreVideoService
+            description: 确认视频上传完成
+            operationId: ShortVideoCoreVideoService_ReportVideoFinishUpload
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.ReportVideoFinishUploadRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ReportVideoFinishUploadResponse'
+    /video/list:
+        post:
+            tags:
+                - ShortVideoCoreVideoService
+            description: 获取当前用户的发布视频列表
+            operationId: ShortVideoCoreVideoService_ListPublishedVideo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.ListPublishedVideoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ListPublishedVideoResponse'
+    /video/upload:
+        post:
+            tags:
+                - ShortVideoCoreVideoService
+            description: 预注册上传视频
+            operationId: ShortVideoCoreVideoService_PreSign4UploadVideo
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.PreSign4UploadVideoRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.PreSign4UploadVideoResponse'
+    /video/{videoId}:
+        get:
+            tags:
+                - ShortVideoCoreVideoService
+            description: 获取视频信息
+            operationId: ShortVideoCoreVideoService_GetVideoById
+            parameters:
+                - name: videoId
+                  in: path
+                  description: '@gotags: json:"video_id,omitempty,string"'
+                  required: true
+                  schema:
+                    type: string
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.GetVideoByIdResponse'
+    file:
+        post:
+            tags:
+                - FileService
+            operationId: FileService_PreSignUploadingPublicFile
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.PreSignUploadPublicFileRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.PreSignUploadPublicFileResponse'
+    file/report:
+        post:
+            tags:
+                - FileService
+            operationId: FileService_ReportPublicFileUploaded
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.ReportPublicFileUploadedRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    code:
+                                        type: integer
+                                        description: Status code. Zero means success.
+                                    msg:
+                                        type: string
+                                        description: Status message. Could be displayed to user.
+                                    data:
+                                        $ref: '#/components/schemas/svapi.ReportPublicFileUploadedResponse'
+components:
+    schemas:
+        svapi.AddFavoriteRequest:
+            type: object
+            properties:
+                target:
+                    type: integer
+                    format: enum
+                type:
+                    type: integer
+                    format: enum
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+        svapi.AddFavoriteResponse:
+            type: object
+            properties: {}
+        svapi.AddFollowRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                    description: '@gotags: json:"userId,omitempty,string"'
+        svapi.AddFollowResponse:
+            type: object
+            properties: {}
+        svapi.AddVideo2CollectionRequest:
+            type: object
+            properties:
+                collectionId:
+                    type: string
+                    description: '@gotags: json:"collectionId,omitempty,string"'
+                videoId:
+                    type: string
+                    description: '@gotags: json:"videoId,omitempty,string"'
+        svapi.AddVideo2CollectionResponse:
+            type: object
+            properties: {}
+        svapi.BindUserVoucherRequest:
+            type: object
+            properties:
+                voucherType:
+                    type: integer
+                    format: enum
+                voucher:
+                    type: string
+        svapi.BindUserVoucherResponse:
+            type: object
+            properties: {}
+        svapi.Collection:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+                userId:
+                    type: string
+                    description: '@gotags: json:"userId,omitempty,string"'
+                name:
+                    type: string
+                description:
+                    type: string
+        svapi.Comment:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+                videoId:
+                    type: string
+                    description: '@gotags: json:"videoId,omitempty,string"'
+                parentId:
+                    type: string
+                    description: '@gotags: json:"parentId,omitempty,string"'
+                user:
+                    $ref: '#/components/schemas/svapi.CommentUser'
+                replyUser:
+                    $ref: '#/components/schemas/svapi.CommentUser'
+                content:
+                    type: string
+                date:
+                    type: string
+                likeCount:
+                    type: string
+                replyCount:
+                    type: string
+                comments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Comment'
+        svapi.CommentUser:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+                name:
+                    type: string
+                avatar:
+                    type: string
+                isFollowing:
+                    type: boolean
+        svapi.CreateCollectionRequest:
+            type: object
+            properties:
+                name:
+                    type: string
+                description:
+                    type: string
+        svapi.CreateCollectionResponse:
+            type: object
+            properties:
+                collection:
+                    $ref: '#/components/schemas/svapi.Collection'
+        svapi.CreateCommentRequest:
+            type: object
+            properties:
+                videoId:
+                    type: string
+                    description: '@gotags: json:"videoId,omitempty,string"'
+                content:
+                    type: string
+                parentId:
+                    type: string
+                    description: '@gotags: json:"parentId,omitempty,string"'
+                replyUserId:
+                    type: string
+                    description: '@gotags: json:"replyUserId,omitempty,string"'
+        svapi.CreateCommentResponse:
+            type: object
+            properties:
+                comment:
+                    $ref: '#/components/schemas/svapi.Comment'
+        svapi.FeedShortVideoRequest:
+            type: object
+            properties:
+                latestTime:
+                    type: string
+                    description: '@gotags: json:"latest_time,omitempty,string"'
+                userId:
+                    type: string
+                    description: '@gotags: json:"user_id,omitempty,string"'
+                feedNum:
+                    type: string
+                    description: '@gotags: json:"feed_num,omitempty,string"'
+            description: 刷视频请求消息类型
+        svapi.FeedShortVideoResponse:
+            type: object
+            properties:
+                meta:
+                    $ref: '#/components/schemas/svapi.Metadata'
+                videos:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Video'
+                nextTime:
+                    type: string
+                    description: '@gotags: json:"next_time,omitempty,string"'
+            description: 刷视频响应消息类型
+        svapi.FollowUser:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+                name:
+                    type: string
+                avatar:
+                    type: string
+                isFollowing:
+                    type: boolean
+        svapi.GetUserInfoResponse:
+            type: object
+            properties:
+                user:
+                    $ref: '#/components/schemas/svapi.User'
+        svapi.GetVerificationCodeRequest:
+            type: object
+            properties:
+                mobile:
+                    type: string
+                email:
+                    type: string
+        svapi.GetVerificationCodeResponse:
+            type: object
+            properties:
+                codeId:
+                    type: string
+                    description: '@gotags: json:"code_id,omitempty,string"'
+        svapi.GetVideoByIdResponse:
+            type: object
+            properties:
+                video:
+                    $ref: '#/components/schemas/svapi.Video'
+            description: 获取视频信息响应消息类型
+        svapi.ListChildCommentRequest:
+            type: object
+            properties:
+                commentId:
+                    type: string
+                    description: '@gotags: json:"commentId,omitempty,string"'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationRequest'
+        svapi.ListChildCommentResponse:
+            type: object
+            properties:
+                comments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Comment'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationResponse'
+        svapi.ListCollectionResponse:
+            type: object
+            properties:
+                collections:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Collection'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationResponse'
+        svapi.ListComment4VideoRequest:
+            type: object
+            properties:
+                videoId:
+                    type: string
+                    description: '@gotags: json:"videoId,omitempty,string"'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationRequest'
+        svapi.ListComment4VideoResponse:
+            type: object
+            properties:
+                comments:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Comment'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationResponse'
+        svapi.ListFavoriteVideoRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                page:
+                    type: integer
+                    format: int32
+                size:
+                    type: integer
+                    format: int32
+        svapi.ListFavoriteVideoResponse:
+            type: object
+            properties:
+                videos:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Video'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationResponse'
+        svapi.ListFollowingResponse:
+            type: object
+            properties:
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.FollowUser'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationResponse'
+        svapi.ListPublishedVideoRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                    description: '@gotags: json:"user_id,omitempty,string"'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationRequest'
+            description: 获取当前用户的发布视频列表请求消息类型
+        svapi.ListPublishedVideoResponse:
+            type: object
+            properties:
+                videoList:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Video'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationResponse'
+            description: 获取当前用户的发布视频列表响应消息类型
+        svapi.ListVideo4CollectionResponse:
+            type: object
+            properties:
+                videos:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Video'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationResponse'
+        svapi.LoginRequest:
+            type: object
+            properties:
+                mobile:
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
+        svapi.LoginResponse:
+            type: object
+            properties:
+                token:
+                    type: string
+        svapi.Metadata:
+            type: object
+            properties:
+                bizCode:
+                    type: integer
+                    format: int32
+                message:
+                    type: string
+                domain:
+                    type: string
+                reason:
+                    type: array
+                    items:
+                        type: string
+        svapi.PaginationRequest:
+            type: object
+            properties:
+                page:
+                    type: integer
+                    format: int32
+                size:
+                    type: integer
+                    format: int32
+                sort:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.SortField'
+        svapi.PaginationResponse:
+            type: object
+            properties:
+                page:
+                    type: integer
+                    format: int32
+                total:
+                    type: integer
+                    format: int32
+                count:
+                    type: integer
+                    format: int32
+        svapi.PreSign4UploadRequest:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: md5 hash
+                fileType:
+                    type: string
+                    description: 文件类型，默认mp4
+                size:
+                    type: string
+                    description: |-
+                        文件大小，单位byte
+                         @gotags: json:"size,omitempty,string"
+                filename:
+                    type: string
+                    description: 文件名
+            description: 通用小文件单次上传请求消息类型
+        svapi.PreSign4UploadResponse:
+            type: object
+            properties:
+                url:
+                    type: string
+                    description: minio上传地址
+                fileId:
+                    type: string
+                    description: |-
+                        文件id
+                         @gotags: json:"file_id,omitempty,string"
+            description: 通用小文件单次上传响应消息类型
+        svapi.PreSign4UploadVideoRequest:
+            type: object
+            properties:
+                hash:
+                    type: string
+                    description: md5 hash
+                fileType:
+                    type: string
+                    description: 文件类型，默认mp4
+                size:
+                    type: string
+                    description: |-
+                        文件大小，单位byte
+                         @gotags: json:"size,omitempty,string"
+                filename:
+                    type: string
+                    description: 文件名
+            description: 预注册上传视频请求消息类型
+        svapi.PreSign4UploadVideoResponse:
+            type: object
+            properties:
+                url:
+                    type: string
+                    description: minio上传地址
+                fileId:
+                    type: string
+                    description: |-
+                        文件id
+                         @gotags: json:"file_id,omitempty,string"
+            description: 预注册上传视频响应消息类型
+        svapi.PreSignUploadPublicFileRequest:
+            type: object
+            properties:
+                hash:
+                    type: string
+                fileType:
+                    type: string
+                size:
+                    type: string
+                    description: 'gotags: json`size,omitempty,string`'
+        svapi.PreSignUploadPublicFileResponse:
+            type: object
+            properties:
+                url:
+                    type: string
+                fileId:
+                    type: string
+                    description: '@gotags: json:"file_id,omitempty,string"'
+        svapi.RegisterRequest:
+            type: object
+            properties:
+                mobile:
+                    type: string
+                email:
+                    type: string
+                password:
+                    type: string
+                codeId:
+                    type: string
+                    description: '@gotags: json:"code_id,omitempty,string"'
+                code:
+                    type: string
+        svapi.RegisterResponse:
+            type: object
+            properties:
+                userId:
+                    type: string
+                    description: '@gotags: json:"user_id,omitempty,string"'
+        svapi.RemoveCollectionRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+        svapi.RemoveCollectionResponse:
+            type: object
+            properties: {}
+        svapi.RemoveCommentRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+        svapi.RemoveCommentResponse:
+            type: object
+            properties: {}
+        svapi.RemoveFavoriteRequest:
+            type: object
+            properties:
+                target:
+                    type: integer
+                    format: enum
+                type:
+                    type: integer
+                    format: enum
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+        svapi.RemoveFavoriteResponse:
+            type: object
+            properties: {}
+        svapi.RemoveFollowRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                    description: '@gotags: json:"userId,omitempty,string"'
+        svapi.RemoveFollowResponse:
+            type: object
+            properties: {}
+        svapi.RemoveVideoFromCollectionRequest:
+            type: object
+            properties:
+                collectionId:
+                    type: string
+                    description: '@gotags: json:"collectionId,omitempty,string"'
+                videoId:
+                    type: string
+                    description: '@gotags: json:"videoId,omitempty,string"'
+        svapi.RemoveVideoFromCollectionResponse:
+            type: object
+            properties: {}
+        svapi.ReportFinishUploadRequest:
+            type: object
+            properties:
+                fileId:
+                    type: string
+                    description: |-
+                        文件id
+                         @gotags: json:"file_id,omitempty,string"
+            description: 通用确认上传完成请求消息类型
+        svapi.ReportFinishUploadResponse:
+            type: object
+            properties:
+                url:
+                    type: string
+                    description: url
+            description: 通用确认上传完成响应消息类型
+        svapi.ReportPublicFileUploadedRequest:
+            type: object
+            properties:
+                fileId:
+                    type: string
+        svapi.ReportPublicFileUploadedResponse:
+            type: object
+            properties:
+                objectName:
+                    type: string
+        svapi.ReportVideoFinishUploadRequest:
+            type: object
+            properties:
+                fileId:
+                    type: string
+                    description: |-
+                        文件id
+                         @gotags: json:"file_id,omitempty,string"
+                title:
+                    type: string
+                    description: 视频标题
+                coverUrl:
+                    type: string
+                    description: 视频封面地址
+                description:
+                    type: string
+                    description: 视频描述
+                videoUrl:
+                    type: string
+                    description: 视频地址
+            description: 确认视频上传完成请求消息类型
+        svapi.ReportVideoFinishUploadResponse:
+            type: object
+            properties:
+                videoId:
+                    type: string
+                    description: |-
+                        视频id
+                         @gotags: json:"video_id,omitempty,string"
+            description: 确认视频上传完成响应消息类型
+        svapi.SortField:
+            type: object
+            properties:
+                field:
+                    type: string
+                order:
+                    type: integer
+                    format: enum
+        svapi.UnbindUserVoucherRequest:
+            type: object
+            properties:
+                voucherType:
+                    type: integer
+                    format: enum
+                voucher:
+                    type: string
+        svapi.UnbindUserVoucherResponse:
+            type: object
+            properties: {}
+        svapi.UpdateCollectionRequest:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+                name:
+                    type: string
+                description:
+                    type: string
+        svapi.UpdateCollectionResponse:
+            type: object
+            properties:
+                collection:
+                    $ref: '#/components/schemas/svapi.Collection'
+        svapi.UpdateUserInfoRequest:
+            type: object
+            properties:
+                userId:
+                    type: string
+                    description: '@gotags: json:"user_id,omitempty,string"'
+                name:
+                    type: string
+                avatar:
+                    type: string
+                backgroundImage:
+                    type: string
+                signature:
+                    type: string
+        svapi.UpdateUserInfoResponse:
+            type: object
+            properties: {}
+        svapi.User:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+                name:
+                    type: string
+                avatar:
+                    type: string
+                backgroundImage:
+                    type: string
+                signature:
+                    type: string
+                mobile:
+                    type: string
+                email:
+                    type: string
+                followCount:
+                    type: string
+                    description: '@gotags: json:"followCount,omitempty,string"'
+                followerCount:
+                    type: string
+                    description: '@gotags: json:"followerCount,omitempty,string"'
+                totalFavorited:
+                    type: string
+                    description: '@gotags: json:"totalFavorited,omitempty,string"'
+                workCount:
+                    type: string
+                    description: '@gotags: json:"workCount,omitempty,string"'
+                favoriteCount:
+                    type: string
+                    description: '@gotags: json:"favoriteCount,omitempty,string"'
+        svapi.Video:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+                author:
+                    $ref: '#/components/schemas/svapi.VideoAuthor'
+                playUrl:
+                    type: string
+                coverUrl:
+                    type: string
+                favoriteCount:
+                    type: string
+                    description: '@gotags: json:"favoriteCount,omitempty,string"'
+                commentCount:
+                    type: string
+                    description: '@gotags: json:"commentCount,omitempty,string"'
+                isFavorite:
+                    type: boolean
+                title:
+                    type: string
+                isCollected:
+                    type: boolean
+                collectedCount:
+                    type: string
+                    description: '@gotags: json:"collectedCount,omitempty,string"'
+        svapi.VideoAuthor:
+            type: object
+            properties:
+                id:
+                    type: string
+                    description: '@gotags: json:"id,omitempty,string"'
+                name:
+                    type: string
+                avatar:
+                    type: string
+                isFollowing:
+                    type: boolean
+tags:
+    - name: CollectionService
+      description: 收藏夹服务
+    - name: CommentService
+      description: 评论
+    - name: FavoriteService
+      description: 点赞
+    - name: FileService
+    - name: FollowService
+      description: 关注
+    - name: ShortVideoCoreVideoService
+    - name: UserService

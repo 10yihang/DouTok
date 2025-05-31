@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+package svapi;
+
+option go_package = "github.com/cloudzenith/DouTok/...;svapi";
+
+import "google/api/annotations.proto";
+import "buf/validate/validate.proto";
+import "svapi/base.proto";
+import "svapi/video.proto";
+
+// 点赞
+service FavoriteService {
+    rpc AddFavorite(AddFavoriteRequest) returns (AddFavoriteResponse) {
+        option (google.api.http) = {
+            post: "/favorite"
+            body: "*"
+        };
+    };
+
+    rpc RemoveFavorite(RemoveFavoriteRequest) returns (RemoveFavoriteResponse) {
+        option (google.api.http) = {
+            delete: "/favorite"
+            body: "*"
+        };
+    };
+
+    rpc ListFavoriteVideo(ListFavoriteVideoRequest) returns (ListFavoriteVideoResponse) {
+        option (google.api.http) = {
+            post: "/favorite/video/list"
+            body: "*"
+        };
+    };
+}
+
+enum FavoriteTarget {
+    VIDEO = 0;
+    COMMENT = 1;
+}
+
+enum FavoriteType {
+    FAVORITE = 0; // 点赞
+    UNLIKE = 1; // 点踩
+}
+
+message AddFavoriteRequest {
+    FavoriteTarget target = 1;
+    FavoriteType type = 2;
+    // @gotags: json:"id,omitempty,string"
+    int64 id = 3;
+}
+
+message AddFavoriteResponse {}
+
+message RemoveFavoriteRequest {
+    FavoriteTarget target = 1;
+    FavoriteType type = 2;
+    // @gotags: json:"id,omitempty,string"
+    int64 id = 3;
+}
+
+message RemoveFavoriteResponse {}
+
+message ListFavoriteVideoRequest {
+    int64 userId = 1;
+    int32 page = 2;
+    int32 size = 3;
+}
+
+message ListFavoriteVideoResponse {
+    repeated Video videos = 1;
+    PaginationResponse pagination = 2;
+}

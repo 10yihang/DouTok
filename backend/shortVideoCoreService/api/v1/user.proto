@@ -1,0 +1,93 @@
+syntax = "proto3";
+
+package shortVideoCoreService.api.v1;
+
+option go_package = "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1;v1";
+
+import "google/api/annotations.proto";
+import "validate/validate.proto";
+import "v1/base.proto";
+
+service UserService {
+    rpc CreateUser(CreateUserRequest) returns (CreateUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/user"
+            body: "*"
+        };
+    };
+    rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse) {
+        option (google.api.http) = {
+            get: "/v1/user/info"
+        };
+    };
+    rpc UpdateUserInfo(UpdateUserInfoRequest) returns (UpdateUserInfoResponse) {
+        option (google.api.http) = {
+            put: "/v1/user"
+            body: "*"
+        };
+    };
+
+    rpc GetUserByIdList(GetUserByIdListRequest) returns (GetUserByIdListResponse) {};
+}
+
+message User {
+    int64 id = 1; // 用户id
+    string name = 2; // 用户名称
+    string avatar = 3; // 用户头像Url
+    string background_image = 4; // 用户个人页顶部大图
+    string signature = 5; // 个人简介
+    string mobile = 6; // 手机号
+    string email = 7; // 邮箱
+    int64 follow_count = 8; // 关注总数
+    int64 follower_count = 9; // 粉丝总数
+    int64 total_favorited = 10; // 获赞数量
+    int64 work_count = 11; // 作品数量
+    int64 favorite_count = 12; // 点赞数量
+}
+
+message CreateUserRequest {
+    string mobile = 1;
+    string email = 2;
+    int64 account_id = 3 [(validate.rules).int64 = {gt: 0}];
+}
+
+message CreateUserResponse {
+    Metadata meta = 1;
+    int64 user_id = 2;
+}
+
+message GetUserInfoRequest {
+    int64 user_id = 1;
+    int64 account_id = 2;
+}
+
+message GetUserInfoResponse {
+    Metadata meta = 1;
+    User user = 2;
+}
+
+message UpdateUserInfoRequest {
+    int64 user_id = 1 [(validate.rules).int64 = {gt: 0}];
+    string name = 2;
+    string avatar = 3;
+    string background_image = 4;
+    string signature = 5;
+}
+
+message UpdateUserInfoResponse {
+    Metadata meta = 1;
+}
+
+enum UpdateUserImageType {
+    AVATAR = 0;
+    BACKGROUND_IMAGE = 1;
+}
+
+message GetUserByIdListRequest {
+    repeated int64 user_id_list = 1;
+}
+
+message GetUserByIdListResponse {
+    repeated User user_list = 1;
+    Metadata meta = 2;
+}

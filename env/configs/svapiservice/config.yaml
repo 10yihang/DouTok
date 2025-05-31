@@ -1,0 +1,13 @@
+app:
+  name: short-video-api
+  version: v0.0.1
+  trace_endpoint: http://jaeger:14268/api/traces # jaeger endpoint
+
+components:
+  etcd:
+    default:
+      host: etcd
+      port: 2379
+  consul:
+    default:
+      address: consul:8500

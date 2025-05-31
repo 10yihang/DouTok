@@ -1,0 +1,37 @@
+version: '3'
+
+networks:
+  total:
+    driver: bridge
+
+services:
+  base-service:
+    container_name: base-service
+    image: base-service
+    volumes:
+      - ./configs/baseservice:/app/configs
+      - ./entrypoint.sh:/app/entrypoint.sh
+    networks:
+      - total
+
+  sv-core-service:
+    container_name: sv-core-service
+    image: sv-core-service
+    volumes:
+      - ./configs/svcoreservice:/app/configs
+      - ./entrypoint.sh:/app/entrypoint.sh
+    networks:
+      - total
+
+  sv-api-service:
+    container_name: sv-api-service
+    image: sv-api-service
+    volumes:
+      - ./configs/svapiservice:/app/configs
+      - ./entrypoint.sh:/app/entrypoint.sh
+    environment:
+      - GOLANG_PROTOBUF_REGISTRATION_CONFLICT=warn
+    ports:
+      - "22000:22000"
+    networks:
+      - total
