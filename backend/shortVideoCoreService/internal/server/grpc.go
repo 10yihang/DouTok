@@ -39,10 +39,10 @@ func NewGRPCServer(config *conf.Config) *grpc.Server {
 	srv := grpc.NewServer(opts...)
 
 	v1.RegisterUserServiceServer(srv, userappprovider.InitUserApplication(config))
-	v1.RegisterVideoServiceServer(srv, videoappprovider.InitVideoApplication(config))
-	v1.RegisterCollectionServiceServer(srv, collectionappprovider.InitCollectionApplication())
+	v1.RegisterVideoServiceServer(srv, videoappprovider.InitVideoApplication(config, log.GetLogger()))
+	v1.RegisterCollectionServiceServer(srv, collectionappprovider.InitCollectionApplication(config, log.GetLogger()))
 	v1.RegisterCommentServiceServer(srv, commentappprovider.InitCommentApplication())
-	v1.RegisterFavoriteServiceServer(srv, favoriteappprovider.InitFavoriteApp())
+	v1.RegisterFavoriteServiceServer(srv, favoriteappprovider.InitFavoriteApp(config, log.GetLogger()))
 	v1.RegisterFollowServiceServer(srv, followappprovider.InitFollowApp())
 	return srv
 }

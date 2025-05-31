@@ -3,11 +3,14 @@ package collectionservice
 import (
 	"context"
 	"errors"
+	"strconv"
+
 	"github.com/TremblingV5/box/dbtx"
 	v1 "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/application/interface/collectionserviceiface"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/entity/collection"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/repoiface"
+	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/adapter/gorseadapter"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/model"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/utils"
 	"github.com/go-kratos/kratos/v2/log"
@@ -16,11 +19,15 @@ import (
 
 type Service struct {
 	collection repoiface.CollectionRepository
+	gorse      gorseadapter.IGorseAdapter
+	logger     *log.Helper
 }
 
-func New(collection repoiface.CollectionRepository) *Service {
+func New(collection repoiface.CollectionRepository, gorse gorseadapter.IGorseAdapter, logger log.Logger) *Service {
 	return &Service{
 		collection: collection,
+		gorse:      gorse,
+		logger:     log.NewHelper(logger),
 	}
 }
 
@@ -122,11 +129,39 @@ func (s *Service) AddVideo2Collection(ctx context.Context, userId, collectionId,
 			return err
 		}
 
+		// 异步记录收藏行为到Gorse推荐系统
+		go func() {
+			if s.gorse != nil {
+				gorseCtx := context.Background()
+				if err := s.gorse.InsertFeedback(gorseCtx,
+					strconv.FormatInt(userId, 10),
+					strconv.FormatInt(videoId, 10),
+					"collect"); err != nil {
+					s.logger.WithContext(gorseCtx).Warnf("failed to record collect feedback to gorse: %v", err)
+				}
+			}
+		}()
+
 		return nil
 	}
 
 	existedRelation.IsDeleted = false
-	return s.collection.UpdateCollectionVideoTx(ctx, existedRelation)
+	err = s.collection.UpdateCollectionVideoTx(ctx, existedRelation)
+	if err == nil {
+		// 异步记录恢复收藏行为到Gorse推荐系统
+		go func() {
+			if s.gorse != nil {
+				gorseCtx := context.Background()
+				if err := s.gorse.InsertFeedback(gorseCtx,
+					strconv.FormatInt(userId, 10),
+					strconv.FormatInt(videoId, 10),
+					"collect"); err != nil {
+					s.logger.WithContext(gorseCtx).Warnf("failed to record collect feedback to gorse: %v", err)
+				}
+			}
+		}()
+	}
+	return err
 }
 
 func (s *Service) ListCollectionVideo(ctx context.Context, collectionId int64, pagination *v1.PaginationRequest) (*collectionserviceiface.ListCollectionVideoResult, error) {
@@ -170,7 +205,23 @@ func (s *Service) RemoveVideo2Collection(ctx context.Context, userId, collection
 		collectionId = coll.ID
 	}
 
-	return s.collection.RemoveVideoFromCollection(ctx, collectionId, videoId)
+	err = s.collection.RemoveVideoFromCollection(ctx, collectionId, videoId)
+	if err == nil {
+		// 异步记录取消收藏行为到Gorse推荐系统
+		go func() {
+			if s.gorse != nil {
+				gorseCtx := context.Background()
+				// 记录为负反馈，帮助推荐系统学习
+				if err := s.gorse.InsertFeedback(gorseCtx,
+					strconv.FormatInt(userId, 10),
+					strconv.FormatInt(videoId, 10),
+					"uncollect"); err != nil {
+					s.logger.WithContext(gorseCtx).Warnf("failed to record uncollect feedback to gorse: %v", err)
+				}
+			}
+		}()
+	}
+	return err
 }
 
 func (s *Service) ListCollectedVideoByGiven(ctx context.Context, userId int64, videoIdList []int64) ([]int64, error) {

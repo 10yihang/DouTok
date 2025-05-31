@@ -3,21 +3,28 @@ package favoriteservice
 import (
 	"context"
 	"fmt"
+	"strconv"
+
 	"github.com/TremblingV5/box/dbtx"
 	v1 "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/application/interface/favoriteserviceiface"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/repoiface"
+	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/adapter/gorseadapter"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/utils/pageresult"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
 type Service struct {
 	favorite repoiface.FavoriteRepository
+	gorse    gorseadapter.IGorseAdapter
+	logger   *log.Helper
 }
 
-func New(favorite repoiface.FavoriteRepository) *Service {
+func New(favorite repoiface.FavoriteRepository, gorse gorseadapter.IGorseAdapter, logger log.Logger) *Service {
 	return &Service{
 		favorite: favorite,
+		gorse:    gorse,
+		logger:   log.NewHelper(logger),
 	}
 }
 
@@ -38,6 +45,24 @@ func (s *Service) AddFavorite(ctx context.Context, dto *favoriteserviceiface.Wri
 		return err
 	}
 
+	// 异步记录到Gorse推荐系统
+	go func() {
+		if s.gorse != nil {
+			gorseCtx := context.Background()
+			feedbackType := "like"
+			if dto.FavoriteType == v1.FavoriteType_UNLIKE {
+				return // 不记录点踩行为
+			}
+
+			if err := s.gorse.InsertFeedback(gorseCtx,
+				strconv.FormatInt(dto.UserId, 10),
+				strconv.FormatInt(dto.TargetId, 10),
+				feedbackType); err != nil {
+				s.logger.WithContext(gorseCtx).Warnf("failed to record like feedback to gorse: %v", err)
+			}
+		}
+	}()
+
 	return nil
 }
 
@@ -51,6 +76,23 @@ func (s *Service) RemoveFavorite(ctx context.Context, dto *favoriteserviceiface.
 		log.Context(ctx).Fatalf("remove favorite failed: %v", err)
 		return err
 	}
+
+	// 异步记录取消点赞到Gorse推荐系统
+	go func() {
+		if s.gorse != nil {
+			gorseCtx := context.Background()
+			// 对于取消点赞，我们可以记录为负反馈或者直接不记录
+			// 这里我们记录为负反馈，帮助推荐系统学习用户不喜欢的内容
+			if dto.FavoriteType == v1.FavoriteType_FAVORITE {
+				if err := s.gorse.InsertFeedback(gorseCtx,
+					strconv.FormatInt(dto.UserId, 10),
+					strconv.FormatInt(dto.TargetId, 10),
+					"dislike"); err != nil {
+					s.logger.WithContext(gorseCtx).Warnf("failed to record dislike feedback to gorse: %v", err)
+				}
+			}
+		}
+	}()
 
 	return nil
 }

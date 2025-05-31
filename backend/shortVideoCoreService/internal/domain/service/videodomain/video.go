@@ -4,38 +4,134 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"strconv"
+	"time"
+
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/conf"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/data/userdata"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/data/videodata"
 	service_dto "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/dto"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/entity"
+	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/adapter/gorseadapter"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/model"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/query"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/utils"
+	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/utils/tagging"
 	"github.com/go-kratos/kratos/v2/log"
 	"gorm.io/gorm"
-	"time"
 )
 
 type VideoUseCase struct {
-	config    *conf.Config
-	videoRepo videodata.IVideoRepo
-	userRepo  userdata.IUserRepo
+	config      *conf.Config
+	videoRepo   videodata.IVideoRepo
+	userRepo    userdata.IUserRepo
+	gorse       gorseadapter.IGorseAdapter
+	videoTagger *tagging.VideoTagger
 }
 
 func NewVideoUseCase(
 	config *conf.Config,
 	userRepo userdata.IUserRepo,
 	videoRepo videodata.IVideoRepo,
+	gorse gorseadapter.IGorseAdapter,
 ) *VideoUseCase {
 	return &VideoUseCase{
-		config:    config,
-		videoRepo: videoRepo,
-		userRepo:  userRepo,
+		config:      config,
+		videoRepo:   videoRepo,
+		userRepo:    userRepo,
+		gorse:       gorse,
+		videoTagger: tagging.NewVideoTagger(),
 	}
 }
 
 func (uc *VideoUseCase) FeedShortVideo(ctx context.Context, request *service_dto.FeedShortVideoRequest) (*service_dto.FeedShortVideoResponse, error) {
+	userIdStr := strconv.FormatInt(request.UserId, 10)
+
+	// 首先尝试从Gorse获取个性化推荐
+	recommendedVideoIds, err := uc.gorse.GetRecommendations(ctx, userIdStr, int(request.FeedNum))
+	if err != nil {
+		log.Context(ctx).Warnf("failed to get recommendations from gorse, falling back to default: %v", err)
+		// 如果Gorse推荐失败，回退到原来的推荐逻辑
+		return uc.fallbackFeed(ctx, request)
+	}
+
+	// 如果推荐数量不足，补充热门视频
+	if len(recommendedVideoIds) < int(request.FeedNum) {
+		popularIds, err := uc.gorse.GetPopularItems(ctx, int(request.FeedNum)-len(recommendedVideoIds))
+		if err != nil {
+			log.Context(ctx).Warnf("failed to get popular items: %v", err)
+		} else {
+			recommendedVideoIds = append(recommendedVideoIds, popularIds...)
+		}
+	}
+
+	// 如果仍然没有推荐结果，使用原来的推荐逻辑
+	if len(recommendedVideoIds) == 0 {
+		log.Context(ctx).Warn("no recommendations from gorse, using fallback feed")
+		return uc.fallbackFeed(ctx, request)
+	}
+
+	// 转换视频ID为int64
+	var videoIds []int64
+	for _, idStr := range recommendedVideoIds {
+		if id, err := strconv.ParseInt(idStr, 10, 64); err == nil {
+			videoIds = append(videoIds, id)
+		}
+	}
+
+	// 从数据库获取视频详情
+	videos, err := uc.videoRepo.FindByIdList(ctx, videoIds)
+	if err != nil {
+		log.Context(ctx).Errorf("failed to get videos by ids: %v", err)
+		return nil, err
+	}
+
+	// 去重并查询用户
+	uniqueUserIds := make(map[int64]struct{})
+	for _, video := range videos {
+		uniqueUserIds[video.UserID] = struct{}{}
+	}
+	userIds := make([]int64, 0, len(uniqueUserIds))
+	for id := range uniqueUserIds {
+		userIds = append(userIds, id)
+	}
+	users, err := uc.userRepo.FindByIds(ctx, query.Q, userIds)
+	if err != nil {
+		return nil, err
+	}
+
+	// 构建用户映射
+	userMap := make(map[int64]*model.User, len(users))
+	for _, user := range users {
+		userMap[user.ID] = user
+	}
+
+	// 构建视频列表
+	videoList := make([]*entity.Video, 0, len(videos))
+	for _, videoModel := range videos {
+		videoEntity := entity.FromVideoModel(videoModel)
+		authorModel, ok := userMap[videoModel.UserID]
+		if !ok {
+			log.Warnf("user not found: %d", videoModel.UserID)
+		}
+		videoEntity.Author = entity.ToAuthorEntity(authorModel)
+		videoList = append(videoList, videoEntity)
+	}
+
+	// 异步记录用户观看行为
+	go func() {
+		for _, video := range videoList {
+			_ = uc.gorse.InsertFeedback(context.Background(), userIdStr, strconv.FormatInt(video.ID, 10), "read")
+		}
+	}()
+
+	return &service_dto.FeedShortVideoResponse{
+		Videos: videoList,
+	}, nil
+}
+
+// fallbackFeed 原来的推荐逻辑，作为备选方案
+func (uc *VideoUseCase) fallbackFeed(ctx context.Context, request *service_dto.FeedShortVideoRequest) (*service_dto.FeedShortVideoResponse, error) {
 	latestTime := time.Now().UTC().Unix()
 	if request.LatestTime > 0 {
 		latestTime = request.LatestTime
@@ -96,6 +192,28 @@ func (uc *VideoUseCase) PublishVideo(ctx context.Context, in *service_dto.Publis
 	if err != nil {
 		return 0, err
 	}
+
+	// 异步将视频信息添加到Gorse推荐系统
+	go func() {
+		videoIdStr := strconv.FormatInt(video.ID, 10)
+		userIdStr := strconv.FormatInt(video.UserID, 10)
+
+		// 提取视频标签
+		tags := uc.videoTagger.ExtractTags(video.Title, video.Description)
+		log.Context(context.Background()).Infof("extracted tags for video %d: %v", video.ID, tags)
+
+		// 插入视频项目，包含分类和标签
+		categories := []string{"video"}
+		if err := uc.gorse.InsertItem(context.Background(), videoIdStr, categories, tags); err != nil {
+			log.Context(context.Background()).Warnf("failed to insert video item to gorse: %v", err)
+		}
+
+		// 记录用户发布行为（表示用户对该类型内容的偏好）
+		if err := uc.gorse.InsertFeedback(context.Background(), userIdStr, videoIdStr, "publish"); err != nil {
+			log.Context(context.Background()).Warnf("failed to record publish feedback to gorse: %v", err)
+		}
+	}()
+
 	return video.ID, nil
 }
 
