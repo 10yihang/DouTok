@@ -2,6 +2,7 @@ package videodata
 
 import (
 	"context"
+
 	infra_dto "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/dto"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/model"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/query"
@@ -16,6 +17,7 @@ type IVideoRepo interface {
 		ctx context.Context, tx *query.Query, userId int64, latestTime int64, PaginationRequest *infra_dto.PaginationRequest,
 	) ([]*model.Video, *infra_dto.PaginationResponse, error)
 	GetVideoFeed(ctx context.Context, tx *query.Query, userId, latestTime, num int64) ([]*model.Video, error)
+	SearchVideo(ctx context.Context, tx *query.Query, query string, limit int) ([]*model.Video, error)
 }
 
 var _ IVideoRepo = (*VideoRepo)(nil)

@@ -28,6 +28,13 @@ service UserService {
     };
 
     rpc GetUserByIdList(GetUserByIdListRequest) returns (GetUserByIdListResponse) {};
+    
+    rpc SearchUser(SearchUserRequest) returns (SearchUserResponse) {
+        option (google.api.http) = {
+            post: "/v1/user/search"
+            body: "*"
+        };
+    };
 }
 
 message User {
@@ -90,4 +97,15 @@ message GetUserByIdListRequest {
 message GetUserByIdListResponse {
     repeated User user_list = 1;
     Metadata meta = 2;
+}
+
+message SearchUserRequest {
+    string query = 1 [(validate.rules).string.min_len = 1]; // 搜索关键词
+    PaginationRequest pagination = 2; // 分页信息
+}
+
+message SearchUserResponse {
+    repeated User user_list = 1;
+    PaginationResponse pagination = 2;
+    Metadata meta = 3;
 }

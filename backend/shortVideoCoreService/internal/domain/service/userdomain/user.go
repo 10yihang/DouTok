@@ -3,6 +3,7 @@ package userdomain
 import (
 	"context"
 	"fmt"
+
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/data/userdata"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/dto"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/entity"
@@ -78,6 +79,20 @@ func (uc *UserUsecase) GetUserByIdList(ctx context.Context, userIdList []int64) 
 	list, err := uc.repo.FindByIds(ctx, query.Q, userIdList)
 	if err != nil {
 		log.Context(ctx).Errorf("failed to get user by id list: %v", err)
+		return nil, err
+	}
+
+	var result []*entity.User
+	for _, item := range list {
+		result = append(result, entity.FromUserModel(item))
+	}
+	return result, nil
+}
+
+func (uc *UserUsecase) SearchUser(ctx context.Context, name string, limit int) ([]*entity.User, error) {
+	list, err := uc.repo.SearchUserByName(ctx, query.Q, name, limit)
+	if err != nil {
+		log.Context(ctx).Errorf("failed to search user by name: %v", err)
 		return nil, err
 	}
 

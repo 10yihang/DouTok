@@ -2,6 +2,7 @@ package svcoreadapter
 
 import (
 	"context"
+
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/adapter/svcoreadapter/useroptions"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/utils/respcheck"
 	v1 "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1"
@@ -52,6 +53,24 @@ func (a *Adapter) GetUserInfoByIdList(ctx context.Context, userIdList []int64) (
 	}
 
 	resp, err := a.user.GetUserByIdList(ctx, req)
+	return respcheck.CheckT[[]*v1.User, *v1.Metadata](
+		resp, err,
+		func() []*v1.User {
+			return resp.UserList
+		},
+	)
+}
+
+func (a *Adapter) SearchUserByName(ctx context.Context, query string, page, size int32) ([]*v1.User, error) {
+	req := &v1.SearchUserRequest{
+		Query: query,
+		Pagination: &v1.PaginationRequest{
+			Page: page,
+			Size: size,
+		},
+	}
+
+	resp, err := a.user.SearchUser(ctx, req)
 	return respcheck.CheckT[[]*v1.User, *v1.Metadata](
 		resp, err,
 		func() []*v1.User {

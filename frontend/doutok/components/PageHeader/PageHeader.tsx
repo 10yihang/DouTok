@@ -14,9 +14,10 @@ export function PageHeader() {
       <div className={"header"}>
         <div className={"logo"}>
           <Image src={"logo.png"} preview={false} alt={"DouTok Logo"} />
-        </div>
-        <div className={"search"}>
-          <MainSearch />
+        </div>        <div className={"search"}>
+          <RequestComponent noAuth={true}>
+            <MainSearch />
+          </RequestComponent>
         </div>
         <div className={"header-menu"}>
           <RequestComponent noAuth={false}>

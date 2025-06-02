@@ -29,15 +29,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ListCollectionResponse'
+                                $ref: '#/components/schemas/svapi.ListCollectionResponse'
         put:
             tags:
                 - CollectionService
@@ -55,15 +47,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.UpdateCollectionResponse'
+                                $ref: '#/components/schemas/svapi.UpdateCollectionResponse'
         post:
             tags:
                 - CollectionService
@@ -81,15 +65,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.CreateCollectionResponse'
+                                $ref: '#/components/schemas/svapi.CreateCollectionResponse'
         delete:
             tags:
                 - CollectionService
@@ -107,15 +83,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.RemoveCollectionResponse'
+                                $ref: '#/components/schemas/svapi.RemoveCollectionResponse'
     /collection/video:
         get:
             tags:
@@ -144,15 +112,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ListVideo4CollectionResponse'
+                                $ref: '#/components/schemas/svapi.ListVideo4CollectionResponse'
         post:
             tags:
                 - CollectionService
@@ -170,15 +130,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.AddVideo2CollectionResponse'
+                                $ref: '#/components/schemas/svapi.AddVideo2CollectionResponse'
         delete:
             tags:
                 - CollectionService
@@ -196,15 +148,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.RemoveVideoFromCollectionResponse'
+                                $ref: '#/components/schemas/svapi.RemoveVideoFromCollectionResponse'
     /comment:
         post:
             tags:
@@ -223,15 +167,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.CreateCommentResponse'
+                                $ref: '#/components/schemas/svapi.CreateCommentResponse'
         delete:
             tags:
                 - CommentService
@@ -249,15 +185,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.RemoveCommentResponse'
+                                $ref: '#/components/schemas/svapi.RemoveCommentResponse'
     /comment/child:
         post:
             tags:
@@ -275,15 +203,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ListChildCommentResponse'
+                                $ref: '#/components/schemas/svapi.ListChildCommentResponse'
     /comment/video:
         post:
             tags:
@@ -302,15 +222,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ListComment4VideoResponse'
+                                $ref: '#/components/schemas/svapi.ListComment4VideoResponse'
     /cover/upload:
         post:
             tags:
@@ -329,15 +241,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.PreSign4UploadResponse'
+                                $ref: '#/components/schemas/svapi.PreSign4UploadResponse'
     /favorite:
         post:
             tags:
@@ -355,15 +259,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.AddFavoriteResponse'
+                                $ref: '#/components/schemas/svapi.AddFavoriteResponse'
         delete:
             tags:
                 - FavoriteService
@@ -380,15 +276,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.RemoveFavoriteResponse'
+                                $ref: '#/components/schemas/svapi.RemoveFavoriteResponse'
     /favorite/video/list:
         post:
             tags:
@@ -406,15 +294,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ListFavoriteVideoResponse'
+                                $ref: '#/components/schemas/svapi.ListFavoriteVideoResponse'
     /file/{fileId}/finish:
         post:
             tags:
@@ -442,15 +322,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ReportFinishUploadResponse'
+                                $ref: '#/components/schemas/svapi.ReportFinishUploadResponse'
     /follow:
         get:
             tags:
@@ -483,15 +355,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ListFollowingResponse'
+                                $ref: '#/components/schemas/svapi.ListFollowingResponse'
         post:
             tags:
                 - FollowService
@@ -508,15 +372,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.AddFollowResponse'
+                                $ref: '#/components/schemas/svapi.AddFollowResponse'
         delete:
             tags:
                 - FollowService
@@ -533,15 +389,26 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.RemoveFollowResponse'
+                                $ref: '#/components/schemas/svapi.RemoveFollowResponse'
+    /search:
+        post:
+            tags:
+                - SearchService
+            description: 搜索
+            operationId: SearchService_Search
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: '#/components/schemas/svapi.ContentSearchRequest'
+                required: true
+            responses:
+                "200":
+                    description: OK
+                    content:
+                        application/json:
+                            schema:
+                                $ref: '#/components/schemas/svapi.ContentSearchResponse'
     /user/code:
         post:
             tags:
@@ -560,15 +427,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.GetVerificationCodeResponse'
+                                $ref: '#/components/schemas/svapi.GetVerificationCodeResponse'
     /user/info:
         get:
             tags:
@@ -587,15 +446,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.GetUserInfoResponse'
+                                $ref: '#/components/schemas/svapi.GetUserInfoResponse'
         put:
             tags:
                 - UserService
@@ -613,15 +464,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.UpdateUserInfoResponse'
+                                $ref: '#/components/schemas/svapi.UpdateUserInfoResponse'
     /user/login:
         post:
             tags:
@@ -640,15 +483,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.LoginResponse'
+                                $ref: '#/components/schemas/svapi.LoginResponse'
     /user/register:
         post:
             tags:
@@ -667,15 +502,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.RegisterResponse'
+                                $ref: '#/components/schemas/svapi.RegisterResponse'
     /user/voucher:
         post:
             tags:
@@ -693,15 +520,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.BindUserVoucherResponse'
+                                $ref: '#/components/schemas/svapi.BindUserVoucherResponse'
         delete:
             tags:
                 - UserService
@@ -718,15 +537,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.UnbindUserVoucherResponse'
+                                $ref: '#/components/schemas/svapi.UnbindUserVoucherResponse'
     /video/feed:
         post:
             tags:
@@ -745,15 +556,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.FeedShortVideoResponse'
+                                $ref: '#/components/schemas/svapi.FeedShortVideoResponse'
     /video/finish:
         post:
             tags:
@@ -772,15 +575,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ReportVideoFinishUploadResponse'
+                                $ref: '#/components/schemas/svapi.ReportVideoFinishUploadResponse'
     /video/list:
         post:
             tags:
@@ -799,15 +594,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ListPublishedVideoResponse'
+                                $ref: '#/components/schemas/svapi.ListPublishedVideoResponse'
     /video/upload:
         post:
             tags:
@@ -826,15 +613,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.PreSign4UploadVideoResponse'
+                                $ref: '#/components/schemas/svapi.PreSign4UploadVideoResponse'
     /video/{videoId}:
         get:
             tags:
@@ -854,15 +633,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.GetVideoByIdResponse'
+                                $ref: '#/components/schemas/svapi.GetVideoByIdResponse'
     file:
         post:
             tags:
@@ -880,15 +651,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.PreSignUploadPublicFileResponse'
+                                $ref: '#/components/schemas/svapi.PreSignUploadPublicFileResponse'
     file/report:
         post:
             tags:
@@ -906,15 +669,7 @@ paths:
                     content:
                         application/json:
                             schema:
-                                properties:
-                                    code:
-                                        type: integer
-                                        description: Status code. Zero means success.
-                                    msg:
-                                        type: string
-                                        description: Status message. Could be displayed to user.
-                                    data:
-                                        $ref: '#/components/schemas/svapi.ReportPublicFileUploadedResponse'
+                                $ref: '#/components/schemas/svapi.ReportPublicFileUploadedResponse'
 components:
     schemas:
         svapi.AddFavoriteRequest:
@@ -1017,6 +772,31 @@ components:
                     type: string
                 isFollowing:
                     type: boolean
+        svapi.ContentSearchRequest:
+            type: object
+            properties:
+                query:
+                    type: string
+                type:
+                    type: integer
+                    format: enum
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationRequest'
+            description: 搜索请求消息类型
+        svapi.ContentSearchResponse:
+            type: object
+            properties:
+                videos:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.Video'
+                users:
+                    type: array
+                    items:
+                        $ref: '#/components/schemas/svapi.User'
+                pagination:
+                    $ref: '#/components/schemas/svapi.PaginationResponse'
+            description: 搜索响应消息类型
         svapi.CreateCollectionRequest:
             type: object
             properties:
@@ -1604,5 +1384,6 @@ tags:
     - name: FileService
     - name: FollowService
       description: 关注
+    - name: SearchService
     - name: ShortVideoCoreVideoService
     - name: UserService

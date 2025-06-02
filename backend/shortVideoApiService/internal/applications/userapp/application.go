@@ -3,6 +3,7 @@ package userapp
 import (
 	"context"
 	"fmt"
+
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/api/svapi"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/adapter/baseadapter"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/adapter/baseadapter/accountoptions"
@@ -205,6 +206,35 @@ func (a *Application) BindUserVoucher(ctx context.Context, request *svapi.BindUs
 func (a *Application) UnbindUserVoucher(ctx context.Context, request *svapi.UnbindUserVoucherRequest) (*svapi.UnbindUserVoucherResponse, error) {
 	//TODO implement me
 	panic("implement me")
+}
+
+func (a *Application) SearchUser(ctx context.Context, query string, pagination *svapi.PaginationRequest) ([]*svapi.User, error) {
+	// 通过用户名搜索用户
+	userList, err := a.core.SearchUserByName(ctx, query, pagination.Page, pagination.Size)
+	if err != nil {
+		log.Context(ctx).Errorf("failed to search user by name: %v", err)
+		return nil, err
+	}
+
+	var result []*svapi.User
+	for _, user := range userList {
+		result = append(result, &svapi.User{
+			Id:              user.Id,
+			Name:            user.Name,
+			Avatar:          user.Avatar,
+			BackgroundImage: user.BackgroundImage,
+			Signature:       user.Signature,
+			Mobile:          user.Mobile,
+			Email:           user.Email,
+			FollowCount:     user.FollowCount,
+			FollowerCount:   user.FollowerCount,
+			TotalFavorited:  user.TotalFavorited,
+			WorkCount:       user.WorkCount,
+			FavoriteCount:   user.FavoriteCount,
+		})
+	}
+
+	return result, nil
 }
 
 var _ svapi.UserServiceHTTPServer = (*Application)(nil)

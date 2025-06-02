@@ -2,6 +2,7 @@ package svcoreadapter
 
 import (
 	"context"
+
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/adapter/svcoreadapter/videooptions"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/utils/respcheck"
 	v1 "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1"
@@ -78,6 +79,22 @@ func (a *Adapter) GetVideosByIdList(ctx context.Context, idList []int64) ([]*v1.
 		VideoIdList: idList,
 	}
 	resp, err := a.video.GetVideoByIdList(ctx, req)
+	return respcheck.CheckT[[]*v1.Video, *v1.Metadata](
+		resp, err,
+		func() []*v1.Video {
+			return resp.Videos
+		},
+	)
+}
+
+func (a *Adapter) SearchVideo(ctx context.Context, query string, userId int64, latestTime int64, searchNum int64) ([]*v1.Video, error) {
+	req := &v1.SearchVideoRequest{
+		Query:      query,
+		UserId:     userId,
+		LatestTime: latestTime,
+		SearchNum:  searchNum,
+	}
+	resp, err := a.video.SearchVideo(ctx, req)
 	return respcheck.CheckT[[]*v1.Video, *v1.Metadata](
 		resp, err,
 		func() []*v1.Video {

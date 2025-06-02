@@ -16,8 +16,10 @@ import (
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/server/favoriteappprovider"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/server/fileappproviders"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/server/followappprovider"
+	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/server/searchappprovider"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/server/userappproviders"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/server/videoappproviders"
+	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/service/searchservice"
 	"github.com/google/wire"
 )
 
@@ -54,4 +56,14 @@ func initFavoriteApp() *favoriteapp.Application {
 func initFollowApp() *followapp.Application {
 	wire.Build(followappprovider.FollowAppProvider)
 	return &followapp.Application{}
+}
+
+func initSearchService() *searchservice.Service {
+	wire.Build(searchappprovider.SearchAppProvider)
+	return &searchservice.Service{}
+}
+
+func initSearchApp() *searchservice.Service {
+	wire.Build(searchappprovider.SearchAppProvider)
+	return &searchservice.Service{}
 }

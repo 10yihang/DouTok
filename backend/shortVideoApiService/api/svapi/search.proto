@@ -1,0 +1,40 @@
+syntax = "proto3";
+package svapi;
+
+option go_package = "github.com/cloudzenith/DouTok/...;svapi";
+
+import "google/api/annotations.proto";
+import "buf/validate/validate.proto";
+import "svapi/base.proto";
+import "svapi/user.proto";
+
+service SearchService {
+    // 搜索
+    rpc Search(ContentSearchRequest) returns (ContentSearchResponse) {
+        option (google.api.http) = {
+            post: "/search"
+            body: "*"
+        };
+    };
+}
+
+// 搜索类型枚举
+enum SearchType {
+    SEARCH_TYPE_ALL = 0;    // 全部
+    SEARCH_TYPE_VIDEO = 1;  // 视频
+    SEARCH_TYPE_USER = 2;   // 用户
+}
+
+// 搜索请求消息类型
+message ContentSearchRequest {
+    string query = 1 [(buf.validate.field).string.min_len = 1]; // 搜索关键词
+    SearchType type = 2; // 搜索类型
+    PaginationRequest pagination = 3; // 分页信息
+}
+
+// 搜索响应消息类型
+message ContentSearchResponse {
+    repeated Video videos = 1; // 视频搜索结果
+    repeated User users = 2;   // 用户搜索结果
+    PaginationResponse pagination = 3; // 分页信息
+}

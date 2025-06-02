@@ -276,3 +276,43 @@ func (uc *VideoUseCase) ListPublishedVideo(ctx context.Context, request *service
 		Pagination: pageResp,
 	}, nil
 }
+
+func (uc *VideoUseCase) SearchVideo(ctx context.Context, queryStr string, limit int) ([]*entity.Video, error) {
+	videos, err := uc.videoRepo.SearchVideo(ctx, query.Q, queryStr, limit)
+	if err != nil {
+		log.Context(ctx).Errorf("failed to search video: %v", err)
+		return nil, err
+	}
+
+	// 获取视频作者信息
+	userIds := make([]int64, 0, len(videos))
+	userIdSet := make(map[int64]bool)
+	for _, video := range videos {
+		if !userIdSet[video.UserID] {
+			userIds = append(userIds, video.UserID)
+			userIdSet[video.UserID] = true
+		}
+	}
+
+	users, err := uc.userRepo.FindByIds(ctx, query.Q, userIds)
+	if err != nil {
+		log.Context(ctx).Errorf("failed to get video authors: %v", err)
+		return nil, err
+	}
+
+	// 构建用户ID到用户模型的映射
+	userMap := make(map[int64]*model.User)
+	for _, user := range users {
+		userMap[user.ID] = user
+	}
+
+	// 组装视频实体和作者信息
+	videoEntityList := entity.FromVideoModelList(videos)
+	for _, video := range videoEntityList {
+		if user, exists := userMap[video.Author.ID]; exists {
+			video.Author = entity.ToAuthorEntity(user)
+		}
+	}
+
+	return videoEntityList, nil
+}

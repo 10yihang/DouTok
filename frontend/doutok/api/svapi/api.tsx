@@ -101,6 +101,24 @@ export interface SvapiCommentUser {
   isFollowing?: boolean;
 }
 
+/**
+ * 搜索请求消息类型
+ */
+export interface SvapiContentSearchRequest {
+  query?: string;
+  type?: number;
+  pagination?: SvapiPaginationRequest;
+}
+
+/**
+ * 搜索响应消息类型
+ */
+export interface SvapiContentSearchResponse {
+  videos?: SvapiVideo[];
+  users?: SvapiUser[];
+  pagination?: SvapiPaginationResponse;
+}
+
 export interface SvapiCreateCollectionRequest {
   name?: string;
   description?: string;
@@ -328,7 +346,7 @@ export interface SvapiPreSign4UploadResponse {
    * 文件id
    *  @gotags: json:"file_id,omitempty,string"
    */
-  file_id?: string;
+  fileId?: string;
 }
 
 /**
@@ -606,7 +624,7 @@ export interface SvapiVideo {
    */
   id?: string;
   author?: SvapiVideoAuthor;
-  play_url?: string;
+  playUrl?: string;
   coverUrl?: string;
   /**
    * @gotags: json:"favoriteCount,omitempty,string"
@@ -635,18 +653,6 @@ export interface SvapiVideoAuthor {
   isFollowing?: boolean;
 }
 
-export interface CollectionServiceListCollectionResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiListCollectionResponse;
-}
-
 export interface CollectionServiceListCollectionQueryParams {
   "pagination.page"?: number;
   "pagination.size"?: number;
@@ -654,7 +660,7 @@ export interface CollectionServiceListCollectionQueryParams {
 
 export type CollectionServiceListCollectionProps = Omit<
   GetProps<
-    CollectionServiceListCollectionResponse,
+    SvapiListCollectionResponse,
     unknown,
     CollectionServiceListCollectionQueryParams,
     void
@@ -669,7 +675,7 @@ export const CollectionServiceListCollection = (
   props: CollectionServiceListCollectionProps
 ) => (
   <Get<
-    CollectionServiceListCollectionResponse,
+    SvapiListCollectionResponse,
     unknown,
     CollectionServiceListCollectionQueryParams,
     void
@@ -681,7 +687,7 @@ export const CollectionServiceListCollection = (
 
 export type UseCollectionServiceListCollectionProps = Omit<
   UseGetProps<
-    CollectionServiceListCollectionResponse,
+    SvapiListCollectionResponse,
     unknown,
     CollectionServiceListCollectionQueryParams,
     void
@@ -696,27 +702,15 @@ export const useCollectionServiceListCollection = (
   props: UseCollectionServiceListCollectionProps
 ) =>
   useGet<
-    CollectionServiceListCollectionResponse,
+    SvapiListCollectionResponse,
     unknown,
     CollectionServiceListCollectionQueryParams,
     void
   >(`/collection`, props);
 
-export interface CollectionServiceUpdateCollectionResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiUpdateCollectionResponse;
-}
-
 export type CollectionServiceUpdateCollectionProps = Omit<
   MutateProps<
-    CollectionServiceUpdateCollectionResponse,
+    SvapiUpdateCollectionResponse,
     unknown,
     void,
     SvapiUpdateCollectionRequest,
@@ -732,7 +726,7 @@ export const CollectionServiceUpdateCollection = (
   props: CollectionServiceUpdateCollectionProps
 ) => (
   <Mutate<
-    CollectionServiceUpdateCollectionResponse,
+    SvapiUpdateCollectionResponse,
     unknown,
     void,
     SvapiUpdateCollectionRequest,
@@ -746,7 +740,7 @@ export const CollectionServiceUpdateCollection = (
 
 export type UseCollectionServiceUpdateCollectionProps = Omit<
   UseMutateProps<
-    CollectionServiceUpdateCollectionResponse,
+    SvapiUpdateCollectionResponse,
     unknown,
     void,
     SvapiUpdateCollectionRequest,
@@ -762,28 +756,16 @@ export const useCollectionServiceUpdateCollection = (
   props: UseCollectionServiceUpdateCollectionProps
 ) =>
   useMutate<
-    CollectionServiceUpdateCollectionResponse,
+    SvapiUpdateCollectionResponse,
     unknown,
     void,
     SvapiUpdateCollectionRequest,
     void
   >("PUT", `/collection`, props);
 
-export interface CollectionServiceCreateCollectionResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiCreateCollectionResponse;
-}
-
 export type CollectionServiceCreateCollectionProps = Omit<
   MutateProps<
-    CollectionServiceCreateCollectionResponse,
+    SvapiCreateCollectionResponse,
     unknown,
     void,
     SvapiCreateCollectionRequest,
@@ -799,7 +781,7 @@ export const CollectionServiceCreateCollection = (
   props: CollectionServiceCreateCollectionProps
 ) => (
   <Mutate<
-    CollectionServiceCreateCollectionResponse,
+    SvapiCreateCollectionResponse,
     unknown,
     void,
     SvapiCreateCollectionRequest,
@@ -813,7 +795,7 @@ export const CollectionServiceCreateCollection = (
 
 export type UseCollectionServiceCreateCollectionProps = Omit<
   UseMutateProps<
-    CollectionServiceCreateCollectionResponse,
+    SvapiCreateCollectionResponse,
     unknown,
     void,
     SvapiCreateCollectionRequest,
@@ -829,28 +811,16 @@ export const useCollectionServiceCreateCollection = (
   props: UseCollectionServiceCreateCollectionProps
 ) =>
   useMutate<
-    CollectionServiceCreateCollectionResponse,
+    SvapiCreateCollectionResponse,
     unknown,
     void,
     SvapiCreateCollectionRequest,
     void
   >("POST", `/collection`, props);
 
-export interface CollectionServiceRemoveCollectionResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiRemoveCollectionResponse;
-}
-
 export type CollectionServiceRemoveCollectionProps = Omit<
   MutateProps<
-    CollectionServiceRemoveCollectionResponse,
+    SvapiRemoveCollectionResponse,
     unknown,
     void,
     SvapiRemoveCollectionRequest,
@@ -866,7 +836,7 @@ export const CollectionServiceRemoveCollection = (
   props: CollectionServiceRemoveCollectionProps
 ) => (
   <Mutate<
-    CollectionServiceRemoveCollectionResponse,
+    SvapiRemoveCollectionResponse,
     unknown,
     void,
     SvapiRemoveCollectionRequest,
@@ -880,7 +850,7 @@ export const CollectionServiceRemoveCollection = (
 
 export type UseCollectionServiceRemoveCollectionProps = Omit<
   UseMutateProps<
-    CollectionServiceRemoveCollectionResponse,
+    SvapiRemoveCollectionResponse,
     unknown,
     void,
     SvapiRemoveCollectionRequest,
@@ -896,24 +866,12 @@ export const useCollectionServiceRemoveCollection = (
   props: UseCollectionServiceRemoveCollectionProps
 ) =>
   useMutate<
-    CollectionServiceRemoveCollectionResponse,
+    SvapiRemoveCollectionResponse,
     unknown,
     void,
     SvapiRemoveCollectionRequest,
     void
   >("DELETE", `/collection`, { ...props });
-
-export interface CollectionServiceListVideo4CollectionResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiListVideo4CollectionResponse;
-}
 
 export interface CollectionServiceListVideo4CollectionQueryParams {
   /**
@@ -926,7 +884,7 @@ export interface CollectionServiceListVideo4CollectionQueryParams {
 
 export type CollectionServiceListVideo4CollectionProps = Omit<
   GetProps<
-    CollectionServiceListVideo4CollectionResponse,
+    SvapiListVideo4CollectionResponse,
     unknown,
     CollectionServiceListVideo4CollectionQueryParams,
     void
@@ -941,7 +899,7 @@ export const CollectionServiceListVideo4Collection = (
   props: CollectionServiceListVideo4CollectionProps
 ) => (
   <Get<
-    CollectionServiceListVideo4CollectionResponse,
+    SvapiListVideo4CollectionResponse,
     unknown,
     CollectionServiceListVideo4CollectionQueryParams,
     void
@@ -953,7 +911,7 @@ export const CollectionServiceListVideo4Collection = (
 
 export type UseCollectionServiceListVideo4CollectionProps = Omit<
   UseGetProps<
-    CollectionServiceListVideo4CollectionResponse,
+    SvapiListVideo4CollectionResponse,
     unknown,
     CollectionServiceListVideo4CollectionQueryParams,
     void
@@ -968,27 +926,15 @@ export const useCollectionServiceListVideo4Collection = (
   props: UseCollectionServiceListVideo4CollectionProps
 ) =>
   useGet<
-    CollectionServiceListVideo4CollectionResponse,
+    SvapiListVideo4CollectionResponse,
     unknown,
     CollectionServiceListVideo4CollectionQueryParams,
     void
   >(`/collection/video`, props);
 
-export interface CollectionServiceAddVideo2CollectionResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiAddVideo2CollectionResponse;
-}
-
 export type CollectionServiceAddVideo2CollectionProps = Omit<
   MutateProps<
-    CollectionServiceAddVideo2CollectionResponse,
+    SvapiAddVideo2CollectionResponse,
     unknown,
     void,
     SvapiAddVideo2CollectionRequest,
@@ -1004,7 +950,7 @@ export const CollectionServiceAddVideo2Collection = (
   props: CollectionServiceAddVideo2CollectionProps
 ) => (
   <Mutate<
-    CollectionServiceAddVideo2CollectionResponse,
+    SvapiAddVideo2CollectionResponse,
     unknown,
     void,
     SvapiAddVideo2CollectionRequest,
@@ -1018,7 +964,7 @@ export const CollectionServiceAddVideo2Collection = (
 
 export type UseCollectionServiceAddVideo2CollectionProps = Omit<
   UseMutateProps<
-    CollectionServiceAddVideo2CollectionResponse,
+    SvapiAddVideo2CollectionResponse,
     unknown,
     void,
     SvapiAddVideo2CollectionRequest,
@@ -1034,28 +980,16 @@ export const useCollectionServiceAddVideo2Collection = (
   props: UseCollectionServiceAddVideo2CollectionProps
 ) =>
   useMutate<
-    CollectionServiceAddVideo2CollectionResponse,
+    SvapiAddVideo2CollectionResponse,
     unknown,
     void,
     SvapiAddVideo2CollectionRequest,
     void
   >("POST", `/collection/video`, props);
 
-export interface CollectionServiceRemoveVideoFromCollectionResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiRemoveVideoFromCollectionResponse;
-}
-
 export type CollectionServiceRemoveVideoFromCollectionProps = Omit<
   MutateProps<
-    CollectionServiceRemoveVideoFromCollectionResponse,
+    SvapiRemoveVideoFromCollectionResponse,
     unknown,
     void,
     SvapiRemoveVideoFromCollectionRequest,
@@ -1071,7 +1005,7 @@ export const CollectionServiceRemoveVideoFromCollection = (
   props: CollectionServiceRemoveVideoFromCollectionProps
 ) => (
   <Mutate<
-    CollectionServiceRemoveVideoFromCollectionResponse,
+    SvapiRemoveVideoFromCollectionResponse,
     unknown,
     void,
     SvapiRemoveVideoFromCollectionRequest,
@@ -1085,7 +1019,7 @@ export const CollectionServiceRemoveVideoFromCollection = (
 
 export type UseCollectionServiceRemoveVideoFromCollectionProps = Omit<
   UseMutateProps<
-    CollectionServiceRemoveVideoFromCollectionResponse,
+    SvapiRemoveVideoFromCollectionResponse,
     unknown,
     void,
     SvapiRemoveVideoFromCollectionRequest,
@@ -1101,28 +1035,16 @@ export const useCollectionServiceRemoveVideoFromCollection = (
   props: UseCollectionServiceRemoveVideoFromCollectionProps
 ) =>
   useMutate<
-    CollectionServiceRemoveVideoFromCollectionResponse,
+    SvapiRemoveVideoFromCollectionResponse,
     unknown,
     void,
     SvapiRemoveVideoFromCollectionRequest,
     void
   >("DELETE", `/collection/video`, { ...props });
 
-export interface CommentServiceCreateCommentResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiCreateCommentResponse;
-}
-
 export type CommentServiceCreateCommentProps = Omit<
   MutateProps<
-    CommentServiceCreateCommentResponse,
+    SvapiCreateCommentResponse,
     unknown,
     void,
     SvapiCreateCommentRequest,
@@ -1138,7 +1060,7 @@ export const CommentServiceCreateComment = (
   props: CommentServiceCreateCommentProps
 ) => (
   <Mutate<
-    CommentServiceCreateCommentResponse,
+    SvapiCreateCommentResponse,
     unknown,
     void,
     SvapiCreateCommentRequest,
@@ -1152,7 +1074,7 @@ export const CommentServiceCreateComment = (
 
 export type UseCommentServiceCreateCommentProps = Omit<
   UseMutateProps<
-    CommentServiceCreateCommentResponse,
+    SvapiCreateCommentResponse,
     unknown,
     void,
     SvapiCreateCommentRequest,
@@ -1168,28 +1090,16 @@ export const useCommentServiceCreateComment = (
   props: UseCommentServiceCreateCommentProps
 ) =>
   useMutate<
-    CommentServiceCreateCommentResponse,
+    SvapiCreateCommentResponse,
     unknown,
     void,
     SvapiCreateCommentRequest,
     void
   >("POST", `/comment`, props);
 
-export interface CommentServiceRemoveCommentResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiRemoveCommentResponse;
-}
-
 export type CommentServiceRemoveCommentProps = Omit<
   MutateProps<
-    CommentServiceRemoveCommentResponse,
+    SvapiRemoveCommentResponse,
     unknown,
     void,
     SvapiRemoveCommentRequest,
@@ -1205,7 +1115,7 @@ export const CommentServiceRemoveComment = (
   props: CommentServiceRemoveCommentProps
 ) => (
   <Mutate<
-    CommentServiceRemoveCommentResponse,
+    SvapiRemoveCommentResponse,
     unknown,
     void,
     SvapiRemoveCommentRequest,
@@ -1219,7 +1129,7 @@ export const CommentServiceRemoveComment = (
 
 export type UseCommentServiceRemoveCommentProps = Omit<
   UseMutateProps<
-    CommentServiceRemoveCommentResponse,
+    SvapiRemoveCommentResponse,
     unknown,
     void,
     SvapiRemoveCommentRequest,
@@ -1235,28 +1145,16 @@ export const useCommentServiceRemoveComment = (
   props: UseCommentServiceRemoveCommentProps
 ) =>
   useMutate<
-    CommentServiceRemoveCommentResponse,
+    SvapiRemoveCommentResponse,
     unknown,
     void,
     SvapiRemoveCommentRequest,
     void
   >("DELETE", `/comment`, { ...props });
 
-export interface CommentServiceListChildCommentResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiListChildCommentResponse;
-}
-
 export type CommentServiceListChildCommentProps = Omit<
   MutateProps<
-    CommentServiceListChildCommentResponse,
+    SvapiListChildCommentResponse,
     unknown,
     void,
     SvapiListChildCommentRequest,
@@ -1269,7 +1167,7 @@ export const CommentServiceListChildComment = (
   props: CommentServiceListChildCommentProps
 ) => (
   <Mutate<
-    CommentServiceListChildCommentResponse,
+    SvapiListChildCommentResponse,
     unknown,
     void,
     SvapiListChildCommentRequest,
@@ -1283,7 +1181,7 @@ export const CommentServiceListChildComment = (
 
 export type UseCommentServiceListChildCommentProps = Omit<
   UseMutateProps<
-    CommentServiceListChildCommentResponse,
+    SvapiListChildCommentResponse,
     unknown,
     void,
     SvapiListChildCommentRequest,
@@ -1296,28 +1194,16 @@ export const useCommentServiceListChildComment = (
   props: UseCommentServiceListChildCommentProps
 ) =>
   useMutate<
-    CommentServiceListChildCommentResponse,
+    SvapiListChildCommentResponse,
     unknown,
     void,
     SvapiListChildCommentRequest,
     void
   >("POST", `/comment/child`, props);
 
-export interface CommentServiceListComment4VideoResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiListComment4VideoResponse;
-}
-
 export type CommentServiceListComment4VideoProps = Omit<
   MutateProps<
-    CommentServiceListComment4VideoResponse,
+    SvapiListComment4VideoResponse,
     unknown,
     void,
     SvapiListComment4VideoRequest,
@@ -1333,7 +1219,7 @@ export const CommentServiceListComment4Video = (
   props: CommentServiceListComment4VideoProps
 ) => (
   <Mutate<
-    CommentServiceListComment4VideoResponse,
+    SvapiListComment4VideoResponse,
     unknown,
     void,
     SvapiListComment4VideoRequest,
@@ -1347,7 +1233,7 @@ export const CommentServiceListComment4Video = (
 
 export type UseCommentServiceListComment4VideoProps = Omit<
   UseMutateProps<
-    CommentServiceListComment4VideoResponse,
+    SvapiListComment4VideoResponse,
     unknown,
     void,
     SvapiListComment4VideoRequest,
@@ -1363,28 +1249,16 @@ export const useCommentServiceListComment4Video = (
   props: UseCommentServiceListComment4VideoProps
 ) =>
   useMutate<
-    CommentServiceListComment4VideoResponse,
+    SvapiListComment4VideoResponse,
     unknown,
     void,
     SvapiListComment4VideoRequest,
     void
   >("POST", `/comment/video`, props);
 
-export interface ShortVideoCoreVideoServicePreSign4UploadCoverResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiPreSign4UploadResponse;
-}
-
 export type ShortVideoCoreVideoServicePreSign4UploadCoverProps = Omit<
   MutateProps<
-    ShortVideoCoreVideoServicePreSign4UploadCoverResponse,
+    SvapiPreSign4UploadResponse,
     unknown,
     void,
     SvapiPreSign4UploadRequest,
@@ -1400,7 +1274,7 @@ export const ShortVideoCoreVideoServicePreSign4UploadCover = (
   props: ShortVideoCoreVideoServicePreSign4UploadCoverProps
 ) => (
   <Mutate<
-    ShortVideoCoreVideoServicePreSign4UploadCoverResponse,
+    SvapiPreSign4UploadResponse,
     unknown,
     void,
     SvapiPreSign4UploadRequest,
@@ -1414,7 +1288,7 @@ export const ShortVideoCoreVideoServicePreSign4UploadCover = (
 
 export type UseShortVideoCoreVideoServicePreSign4UploadCoverProps = Omit<
   UseMutateProps<
-    ShortVideoCoreVideoServicePreSign4UploadCoverResponse,
+    SvapiPreSign4UploadResponse,
     unknown,
     void,
     SvapiPreSign4UploadRequest,
@@ -1430,28 +1304,16 @@ export const useShortVideoCoreVideoServicePreSign4UploadCover = (
   props: UseShortVideoCoreVideoServicePreSign4UploadCoverProps
 ) =>
   useMutate<
-    ShortVideoCoreVideoServicePreSign4UploadCoverResponse,
+    SvapiPreSign4UploadResponse,
     unknown,
     void,
     SvapiPreSign4UploadRequest,
     void
   >("POST", `/cover/upload`, props);
 
-export interface FavoriteServiceAddFavoriteResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiAddFavoriteResponse;
-}
-
 export type FavoriteServiceAddFavoriteProps = Omit<
   MutateProps<
-    FavoriteServiceAddFavoriteResponse,
+    SvapiAddFavoriteResponse,
     unknown,
     void,
     SvapiAddFavoriteRequest,
@@ -1464,7 +1326,7 @@ export const FavoriteServiceAddFavorite = (
   props: FavoriteServiceAddFavoriteProps
 ) => (
   <Mutate<
-    FavoriteServiceAddFavoriteResponse,
+    SvapiAddFavoriteResponse,
     unknown,
     void,
     SvapiAddFavoriteRequest,
@@ -1478,7 +1340,7 @@ export const FavoriteServiceAddFavorite = (
 
 export type UseFavoriteServiceAddFavoriteProps = Omit<
   UseMutateProps<
-    FavoriteServiceAddFavoriteResponse,
+    SvapiAddFavoriteResponse,
     unknown,
     void,
     SvapiAddFavoriteRequest,
@@ -1491,28 +1353,16 @@ export const useFavoriteServiceAddFavorite = (
   props: UseFavoriteServiceAddFavoriteProps
 ) =>
   useMutate<
-    FavoriteServiceAddFavoriteResponse,
+    SvapiAddFavoriteResponse,
     unknown,
     void,
     SvapiAddFavoriteRequest,
     void
   >("POST", `/favorite`, props);
 
-export interface FavoriteServiceRemoveFavoriteResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiRemoveFavoriteResponse;
-}
-
 export type FavoriteServiceRemoveFavoriteProps = Omit<
   MutateProps<
-    FavoriteServiceRemoveFavoriteResponse,
+    SvapiRemoveFavoriteResponse,
     unknown,
     void,
     SvapiRemoveFavoriteRequest,
@@ -1525,7 +1375,7 @@ export const FavoriteServiceRemoveFavorite = (
   props: FavoriteServiceRemoveFavoriteProps
 ) => (
   <Mutate<
-    FavoriteServiceRemoveFavoriteResponse,
+    SvapiRemoveFavoriteResponse,
     unknown,
     void,
     SvapiRemoveFavoriteRequest,
@@ -1539,7 +1389,7 @@ export const FavoriteServiceRemoveFavorite = (
 
 export type UseFavoriteServiceRemoveFavoriteProps = Omit<
   UseMutateProps<
-    FavoriteServiceRemoveFavoriteResponse,
+    SvapiRemoveFavoriteResponse,
     unknown,
     void,
     SvapiRemoveFavoriteRequest,
@@ -1552,28 +1402,16 @@ export const useFavoriteServiceRemoveFavorite = (
   props: UseFavoriteServiceRemoveFavoriteProps
 ) =>
   useMutate<
-    FavoriteServiceRemoveFavoriteResponse,
+    SvapiRemoveFavoriteResponse,
     unknown,
     void,
     SvapiRemoveFavoriteRequest,
     void
   >("DELETE", `/favorite`, { ...props });
 
-export interface FavoriteServiceListFavoriteVideoResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiListFavoriteVideoResponse;
-}
-
 export type FavoriteServiceListFavoriteVideoProps = Omit<
   MutateProps<
-    FavoriteServiceListFavoriteVideoResponse,
+    SvapiListFavoriteVideoResponse,
     unknown,
     void,
     SvapiListFavoriteVideoRequest,
@@ -1586,7 +1424,7 @@ export const FavoriteServiceListFavoriteVideo = (
   props: FavoriteServiceListFavoriteVideoProps
 ) => (
   <Mutate<
-    FavoriteServiceListFavoriteVideoResponse,
+    SvapiListFavoriteVideoResponse,
     unknown,
     void,
     SvapiListFavoriteVideoRequest,
@@ -1600,7 +1438,7 @@ export const FavoriteServiceListFavoriteVideo = (
 
 export type UseFavoriteServiceListFavoriteVideoProps = Omit<
   UseMutateProps<
-    FavoriteServiceListFavoriteVideoResponse,
+    SvapiListFavoriteVideoResponse,
     unknown,
     void,
     SvapiListFavoriteVideoRequest,
@@ -1613,24 +1451,12 @@ export const useFavoriteServiceListFavoriteVideo = (
   props: UseFavoriteServiceListFavoriteVideoProps
 ) =>
   useMutate<
-    FavoriteServiceListFavoriteVideoResponse,
+    SvapiListFavoriteVideoResponse,
     unknown,
     void,
     SvapiListFavoriteVideoRequest,
     void
   >("POST", `/favorite/video/list`, props);
-
-export interface ShortVideoCoreVideoServiceReportFinishUploadResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiReportFinishUploadResponse;
-}
 
 export interface ShortVideoCoreVideoServiceReportFinishUploadPathParams {
   /**
@@ -1642,7 +1468,7 @@ export interface ShortVideoCoreVideoServiceReportFinishUploadPathParams {
 
 export type ShortVideoCoreVideoServiceReportFinishUploadProps = Omit<
   MutateProps<
-    ShortVideoCoreVideoServiceReportFinishUploadResponse,
+    SvapiReportFinishUploadResponse,
     unknown,
     void,
     SvapiReportFinishUploadRequest,
@@ -1660,7 +1486,7 @@ export const ShortVideoCoreVideoServiceReportFinishUpload = ({
   ...props
 }: ShortVideoCoreVideoServiceReportFinishUploadProps) => (
   <Mutate<
-    ShortVideoCoreVideoServiceReportFinishUploadResponse,
+    SvapiReportFinishUploadResponse,
     unknown,
     void,
     SvapiReportFinishUploadRequest,
@@ -1674,7 +1500,7 @@ export const ShortVideoCoreVideoServiceReportFinishUpload = ({
 
 export type UseShortVideoCoreVideoServiceReportFinishUploadProps = Omit<
   UseMutateProps<
-    ShortVideoCoreVideoServiceReportFinishUploadResponse,
+    SvapiReportFinishUploadResponse,
     unknown,
     void,
     SvapiReportFinishUploadRequest,
@@ -1692,7 +1518,7 @@ export const useShortVideoCoreVideoServiceReportFinishUpload = ({
   ...props
 }: UseShortVideoCoreVideoServiceReportFinishUploadProps) =>
   useMutate<
-    ShortVideoCoreVideoServiceReportFinishUploadResponse,
+    SvapiReportFinishUploadResponse,
     unknown,
     void,
     SvapiReportFinishUploadRequest,
@@ -1703,18 +1529,6 @@ export const useShortVideoCoreVideoServiceReportFinishUpload = ({
       `/file/${paramsInPath.fileId}/finish`,
     { pathParams: { fileId }, ...props }
   );
-
-export interface FollowServiceListFollowingResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiListFollowingResponse;
-}
 
 export interface FollowServiceListFollowingQueryParams {
   /**
@@ -1728,7 +1542,7 @@ export interface FollowServiceListFollowingQueryParams {
 
 export type FollowServiceListFollowingProps = Omit<
   GetProps<
-    FollowServiceListFollowingResponse,
+    SvapiListFollowingResponse,
     unknown,
     FollowServiceListFollowingQueryParams,
     void
@@ -1740,7 +1554,7 @@ export const FollowServiceListFollowing = (
   props: FollowServiceListFollowingProps
 ) => (
   <Get<
-    FollowServiceListFollowingResponse,
+    SvapiListFollowingResponse,
     unknown,
     FollowServiceListFollowingQueryParams,
     void
@@ -1752,7 +1566,7 @@ export const FollowServiceListFollowing = (
 
 export type UseFollowServiceListFollowingProps = Omit<
   UseGetProps<
-    FollowServiceListFollowingResponse,
+    SvapiListFollowingResponse,
     unknown,
     FollowServiceListFollowingQueryParams,
     void
@@ -1764,27 +1578,15 @@ export const useFollowServiceListFollowing = (
   props: UseFollowServiceListFollowingProps
 ) =>
   useGet<
-    FollowServiceListFollowingResponse,
+    SvapiListFollowingResponse,
     unknown,
     FollowServiceListFollowingQueryParams,
     void
   >(`/follow`, props);
 
-export interface FollowServiceAddFollowResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiAddFollowResponse;
-}
-
 export type FollowServiceAddFollowProps = Omit<
   MutateProps<
-    FollowServiceAddFollowResponse,
+    SvapiAddFollowResponse,
     unknown,
     void,
     SvapiAddFollowRequest,
@@ -1794,13 +1596,7 @@ export type FollowServiceAddFollowProps = Omit<
 >;
 
 export const FollowServiceAddFollow = (props: FollowServiceAddFollowProps) => (
-  <Mutate<
-    FollowServiceAddFollowResponse,
-    unknown,
-    void,
-    SvapiAddFollowRequest,
-    void
-  >
+  <Mutate<SvapiAddFollowResponse, unknown, void, SvapiAddFollowRequest, void>
     verb="POST"
     path={`/follow`}
     {...props}
@@ -1809,7 +1605,7 @@ export const FollowServiceAddFollow = (props: FollowServiceAddFollowProps) => (
 
 export type UseFollowServiceAddFollowProps = Omit<
   UseMutateProps<
-    FollowServiceAddFollowResponse,
+    SvapiAddFollowResponse,
     unknown,
     void,
     SvapiAddFollowRequest,
@@ -1821,29 +1617,15 @@ export type UseFollowServiceAddFollowProps = Omit<
 export const useFollowServiceAddFollow = (
   props: UseFollowServiceAddFollowProps
 ) =>
-  useMutate<
-    FollowServiceAddFollowResponse,
-    unknown,
-    void,
-    SvapiAddFollowRequest,
-    void
-  >("POST", `/follow`, props);
-
-export interface FollowServiceRemoveFollowResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiRemoveFollowResponse;
-}
+  useMutate<SvapiAddFollowResponse, unknown, void, SvapiAddFollowRequest, void>(
+    "POST",
+    `/follow`,
+    props
+  );
 
 export type FollowServiceRemoveFollowProps = Omit<
   MutateProps<
-    FollowServiceRemoveFollowResponse,
+    SvapiRemoveFollowResponse,
     unknown,
     void,
     SvapiRemoveFollowRequest,
@@ -1856,7 +1638,7 @@ export const FollowServiceRemoveFollow = (
   props: FollowServiceRemoveFollowProps
 ) => (
   <Mutate<
-    FollowServiceRemoveFollowResponse,
+    SvapiRemoveFollowResponse,
     unknown,
     void,
     SvapiRemoveFollowRequest,
@@ -1870,7 +1652,7 @@ export const FollowServiceRemoveFollow = (
 
 export type UseFollowServiceRemoveFollowProps = Omit<
   UseMutateProps<
-    FollowServiceRemoveFollowResponse,
+    SvapiRemoveFollowResponse,
     unknown,
     void,
     SvapiRemoveFollowRequest,
@@ -1883,28 +1665,67 @@ export const useFollowServiceRemoveFollow = (
   props: UseFollowServiceRemoveFollowProps
 ) =>
   useMutate<
-    FollowServiceRemoveFollowResponse,
+    SvapiRemoveFollowResponse,
     unknown,
     void,
     SvapiRemoveFollowRequest,
     void
   >("DELETE", `/follow`, { ...props });
 
-export interface UserServiceGetVerificationCodeResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiGetVerificationCodeResponse;
-}
+export type SearchServiceSearchProps = Omit<
+  MutateProps<
+    SvapiContentSearchResponse,
+    unknown,
+    void,
+    SvapiContentSearchRequest,
+    void
+  >,
+  "path" | "verb"
+>;
+
+/**
+ * 搜索
+ */
+export const SearchServiceSearch = (props: SearchServiceSearchProps) => (
+  <Mutate<
+    SvapiContentSearchResponse,
+    unknown,
+    void,
+    SvapiContentSearchRequest,
+    void
+  >
+    verb="POST"
+    path={`/search`}
+    {...props}
+  />
+);
+
+export type UseSearchServiceSearchProps = Omit<
+  UseMutateProps<
+    SvapiContentSearchResponse,
+    unknown,
+    void,
+    SvapiContentSearchRequest,
+    void
+  >,
+  "path" | "verb"
+>;
+
+/**
+ * 搜索
+ */
+export const useSearchServiceSearch = (props: UseSearchServiceSearchProps) =>
+  useMutate<
+    SvapiContentSearchResponse,
+    unknown,
+    void,
+    SvapiContentSearchRequest,
+    void
+  >("POST", `/search`, props);
 
 export type UserServiceGetVerificationCodeProps = Omit<
   MutateProps<
-    UserServiceGetVerificationCodeResponse,
+    SvapiGetVerificationCodeResponse,
     unknown,
     void,
     SvapiGetVerificationCodeRequest,
@@ -1920,7 +1741,7 @@ export const UserServiceGetVerificationCode = (
   props: UserServiceGetVerificationCodeProps
 ) => (
   <Mutate<
-    UserServiceGetVerificationCodeResponse,
+    SvapiGetVerificationCodeResponse,
     unknown,
     void,
     SvapiGetVerificationCodeRequest,
@@ -1934,7 +1755,7 @@ export const UserServiceGetVerificationCode = (
 
 export type UseUserServiceGetVerificationCodeProps = Omit<
   UseMutateProps<
-    UserServiceGetVerificationCodeResponse,
+    SvapiGetVerificationCodeResponse,
     unknown,
     void,
     SvapiGetVerificationCodeRequest,
@@ -1950,24 +1771,12 @@ export const useUserServiceGetVerificationCode = (
   props: UseUserServiceGetVerificationCodeProps
 ) =>
   useMutate<
-    UserServiceGetVerificationCodeResponse,
+    SvapiGetVerificationCodeResponse,
     unknown,
     void,
     SvapiGetVerificationCodeRequest,
     void
   >("POST", `/user/code`, props);
-
-export interface UserServiceGetUserInfoResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiGetUserInfoResponse;
-}
 
 export interface UserServiceGetUserInfoQueryParams {
   /**
@@ -1978,7 +1787,7 @@ export interface UserServiceGetUserInfoQueryParams {
 
 export type UserServiceGetUserInfoProps = Omit<
   GetProps<
-    UserServiceGetUserInfoResponse,
+    SvapiGetUserInfoResponse,
     unknown,
     UserServiceGetUserInfoQueryParams,
     void
@@ -1991,7 +1800,7 @@ export type UserServiceGetUserInfoProps = Omit<
  */
 export const UserServiceGetUserInfo = (props: UserServiceGetUserInfoProps) => (
   <Get<
-    UserServiceGetUserInfoResponse,
+    SvapiGetUserInfoResponse,
     unknown,
     UserServiceGetUserInfoQueryParams,
     void
@@ -2003,7 +1812,7 @@ export const UserServiceGetUserInfo = (props: UserServiceGetUserInfoProps) => (
 
 export type UseUserServiceGetUserInfoProps = Omit<
   UseGetProps<
-    UserServiceGetUserInfoResponse,
+    SvapiGetUserInfoResponse,
     unknown,
     UserServiceGetUserInfoQueryParams,
     void
@@ -2018,27 +1827,15 @@ export const useUserServiceGetUserInfo = (
   props: UseUserServiceGetUserInfoProps
 ) =>
   useGet<
-    UserServiceGetUserInfoResponse,
+    SvapiGetUserInfoResponse,
     unknown,
     UserServiceGetUserInfoQueryParams,
     void
   >(`/user/info`, props);
 
-export interface UserServiceUpdateUserInfoResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiUpdateUserInfoResponse;
-}
-
 export type UserServiceUpdateUserInfoProps = Omit<
   MutateProps<
-    UserServiceUpdateUserInfoResponse,
+    SvapiUpdateUserInfoResponse,
     unknown,
     void,
     SvapiUpdateUserInfoRequest,
@@ -2054,7 +1851,7 @@ export const UserServiceUpdateUserInfo = (
   props: UserServiceUpdateUserInfoProps
 ) => (
   <Mutate<
-    UserServiceUpdateUserInfoResponse,
+    SvapiUpdateUserInfoResponse,
     unknown,
     void,
     SvapiUpdateUserInfoRequest,
@@ -2068,7 +1865,7 @@ export const UserServiceUpdateUserInfo = (
 
 export type UseUserServiceUpdateUserInfoProps = Omit<
   UseMutateProps<
-    UserServiceUpdateUserInfoResponse,
+    SvapiUpdateUserInfoResponse,
     unknown,
     void,
     SvapiUpdateUserInfoRequest,
@@ -2084,27 +1881,15 @@ export const useUserServiceUpdateUserInfo = (
   props: UseUserServiceUpdateUserInfoProps
 ) =>
   useMutate<
-    UserServiceUpdateUserInfoResponse,
+    SvapiUpdateUserInfoResponse,
     unknown,
     void,
     SvapiUpdateUserInfoRequest,
     void
   >("PUT", `/user/info`, props);
 
-export interface UserServiceLoginResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiLoginResponse;
-}
-
 export type UserServiceLoginProps = Omit<
-  MutateProps<UserServiceLoginResponse, unknown, void, SvapiLoginRequest, void>,
+  MutateProps<SvapiLoginResponse, unknown, void, SvapiLoginRequest, void>,
   "path" | "verb"
 >;
 
@@ -2112,7 +1897,7 @@ export type UserServiceLoginProps = Omit<
  * 登录
  */
 export const UserServiceLogin = (props: UserServiceLoginProps) => (
-  <Mutate<UserServiceLoginResponse, unknown, void, SvapiLoginRequest, void>
+  <Mutate<SvapiLoginResponse, unknown, void, SvapiLoginRequest, void>
     verb="POST"
     path={`/user/login`}
     {...props}
@@ -2120,13 +1905,7 @@ export const UserServiceLogin = (props: UserServiceLoginProps) => (
 );
 
 export type UseUserServiceLoginProps = Omit<
-  UseMutateProps<
-    UserServiceLoginResponse,
-    unknown,
-    void,
-    SvapiLoginRequest,
-    void
-  >,
+  UseMutateProps<SvapiLoginResponse, unknown, void, SvapiLoginRequest, void>,
   "path" | "verb"
 >;
 
@@ -2134,32 +1913,14 @@ export type UseUserServiceLoginProps = Omit<
  * 登录
  */
 export const useUserServiceLogin = (props: UseUserServiceLoginProps) =>
-  useMutate<UserServiceLoginResponse, unknown, void, SvapiLoginRequest, void>(
+  useMutate<SvapiLoginResponse, unknown, void, SvapiLoginRequest, void>(
     "POST",
     `/user/login`,
     props
   );
 
-export interface UserServiceRegisterResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiRegisterResponse;
-}
-
 export type UserServiceRegisterProps = Omit<
-  MutateProps<
-    UserServiceRegisterResponse,
-    unknown,
-    void,
-    SvapiRegisterRequest,
-    void
-  >,
+  MutateProps<SvapiRegisterResponse, unknown, void, SvapiRegisterRequest, void>,
   "path" | "verb"
 >;
 
@@ -2167,13 +1928,7 @@ export type UserServiceRegisterProps = Omit<
  * 注册
  */
 export const UserServiceRegister = (props: UserServiceRegisterProps) => (
-  <Mutate<
-    UserServiceRegisterResponse,
-    unknown,
-    void,
-    SvapiRegisterRequest,
-    void
-  >
+  <Mutate<SvapiRegisterResponse, unknown, void, SvapiRegisterRequest, void>
     verb="POST"
     path={`/user/register`}
     {...props}
@@ -2182,7 +1937,7 @@ export const UserServiceRegister = (props: UserServiceRegisterProps) => (
 
 export type UseUserServiceRegisterProps = Omit<
   UseMutateProps<
-    UserServiceRegisterResponse,
+    SvapiRegisterResponse,
     unknown,
     void,
     SvapiRegisterRequest,
@@ -2195,29 +1950,15 @@ export type UseUserServiceRegisterProps = Omit<
  * 注册
  */
 export const useUserServiceRegister = (props: UseUserServiceRegisterProps) =>
-  useMutate<
-    UserServiceRegisterResponse,
-    unknown,
-    void,
-    SvapiRegisterRequest,
-    void
-  >("POST", `/user/register`, props);
-
-export interface UserServiceBindUserVoucherResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiBindUserVoucherResponse;
-}
+  useMutate<SvapiRegisterResponse, unknown, void, SvapiRegisterRequest, void>(
+    "POST",
+    `/user/register`,
+    props
+  );
 
 export type UserServiceBindUserVoucherProps = Omit<
   MutateProps<
-    UserServiceBindUserVoucherResponse,
+    SvapiBindUserVoucherResponse,
     unknown,
     void,
     SvapiBindUserVoucherRequest,
@@ -2230,7 +1971,7 @@ export const UserServiceBindUserVoucher = (
   props: UserServiceBindUserVoucherProps
 ) => (
   <Mutate<
-    UserServiceBindUserVoucherResponse,
+    SvapiBindUserVoucherResponse,
     unknown,
     void,
     SvapiBindUserVoucherRequest,
@@ -2244,7 +1985,7 @@ export const UserServiceBindUserVoucher = (
 
 export type UseUserServiceBindUserVoucherProps = Omit<
   UseMutateProps<
-    UserServiceBindUserVoucherResponse,
+    SvapiBindUserVoucherResponse,
     unknown,
     void,
     SvapiBindUserVoucherRequest,
@@ -2257,28 +1998,16 @@ export const useUserServiceBindUserVoucher = (
   props: UseUserServiceBindUserVoucherProps
 ) =>
   useMutate<
-    UserServiceBindUserVoucherResponse,
+    SvapiBindUserVoucherResponse,
     unknown,
     void,
     SvapiBindUserVoucherRequest,
     void
   >("POST", `/user/voucher`, props);
 
-export interface UserServiceUnbindUserVoucherResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiUnbindUserVoucherResponse;
-}
-
 export type UserServiceUnbindUserVoucherProps = Omit<
   MutateProps<
-    UserServiceUnbindUserVoucherResponse,
+    SvapiUnbindUserVoucherResponse,
     unknown,
     void,
     SvapiUnbindUserVoucherRequest,
@@ -2291,7 +2020,7 @@ export const UserServiceUnbindUserVoucher = (
   props: UserServiceUnbindUserVoucherProps
 ) => (
   <Mutate<
-    UserServiceUnbindUserVoucherResponse,
+    SvapiUnbindUserVoucherResponse,
     unknown,
     void,
     SvapiUnbindUserVoucherRequest,
@@ -2305,7 +2034,7 @@ export const UserServiceUnbindUserVoucher = (
 
 export type UseUserServiceUnbindUserVoucherProps = Omit<
   UseMutateProps<
-    UserServiceUnbindUserVoucherResponse,
+    SvapiUnbindUserVoucherResponse,
     unknown,
     void,
     SvapiUnbindUserVoucherRequest,
@@ -2318,28 +2047,16 @@ export const useUserServiceUnbindUserVoucher = (
   props: UseUserServiceUnbindUserVoucherProps
 ) =>
   useMutate<
-    UserServiceUnbindUserVoucherResponse,
+    SvapiUnbindUserVoucherResponse,
     unknown,
     void,
     SvapiUnbindUserVoucherRequest,
     void
   >("DELETE", `/user/voucher`, { ...props });
 
-export interface ShortVideoCoreVideoServiceFeedShortVideoResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiFeedShortVideoResponse;
-}
-
 export type ShortVideoCoreVideoServiceFeedShortVideoProps = Omit<
   MutateProps<
-    ShortVideoCoreVideoServiceFeedShortVideoResponse,
+    SvapiFeedShortVideoResponse,
     unknown,
     void,
     SvapiFeedShortVideoRequest,
@@ -2355,7 +2072,7 @@ export const ShortVideoCoreVideoServiceFeedShortVideo = (
   props: ShortVideoCoreVideoServiceFeedShortVideoProps
 ) => (
   <Mutate<
-    ShortVideoCoreVideoServiceFeedShortVideoResponse,
+    SvapiFeedShortVideoResponse,
     unknown,
     void,
     SvapiFeedShortVideoRequest,
@@ -2369,7 +2086,7 @@ export const ShortVideoCoreVideoServiceFeedShortVideo = (
 
 export type UseShortVideoCoreVideoServiceFeedShortVideoProps = Omit<
   UseMutateProps<
-    ShortVideoCoreVideoServiceFeedShortVideoResponse,
+    SvapiFeedShortVideoResponse,
     unknown,
     void,
     SvapiFeedShortVideoRequest,
@@ -2385,28 +2102,16 @@ export const useShortVideoCoreVideoServiceFeedShortVideo = (
   props: UseShortVideoCoreVideoServiceFeedShortVideoProps
 ) =>
   useMutate<
-    ShortVideoCoreVideoServiceFeedShortVideoResponse,
+    SvapiFeedShortVideoResponse,
     unknown,
     void,
     SvapiFeedShortVideoRequest,
     void
   >("POST", `/video/feed`, props);
 
-export interface ShortVideoCoreVideoServiceReportVideoFinishUploadResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiReportVideoFinishUploadResponse;
-}
-
 export type ShortVideoCoreVideoServiceReportVideoFinishUploadProps = Omit<
   MutateProps<
-    ShortVideoCoreVideoServiceReportVideoFinishUploadResponse,
+    SvapiReportVideoFinishUploadResponse,
     unknown,
     void,
     SvapiReportVideoFinishUploadRequest,
@@ -2422,7 +2127,7 @@ export const ShortVideoCoreVideoServiceReportVideoFinishUpload = (
   props: ShortVideoCoreVideoServiceReportVideoFinishUploadProps
 ) => (
   <Mutate<
-    ShortVideoCoreVideoServiceReportVideoFinishUploadResponse,
+    SvapiReportVideoFinishUploadResponse,
     unknown,
     void,
     SvapiReportVideoFinishUploadRequest,
@@ -2436,7 +2141,7 @@ export const ShortVideoCoreVideoServiceReportVideoFinishUpload = (
 
 export type UseShortVideoCoreVideoServiceReportVideoFinishUploadProps = Omit<
   UseMutateProps<
-    ShortVideoCoreVideoServiceReportVideoFinishUploadResponse,
+    SvapiReportVideoFinishUploadResponse,
     unknown,
     void,
     SvapiReportVideoFinishUploadRequest,
@@ -2452,28 +2157,16 @@ export const useShortVideoCoreVideoServiceReportVideoFinishUpload = (
   props: UseShortVideoCoreVideoServiceReportVideoFinishUploadProps
 ) =>
   useMutate<
-    ShortVideoCoreVideoServiceReportVideoFinishUploadResponse,
+    SvapiReportVideoFinishUploadResponse,
     unknown,
     void,
     SvapiReportVideoFinishUploadRequest,
     void
   >("POST", `/video/finish`, props);
 
-export interface ShortVideoCoreVideoServiceListPublishedVideoResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiListPublishedVideoResponse;
-}
-
 export type ShortVideoCoreVideoServiceListPublishedVideoProps = Omit<
   MutateProps<
-    ShortVideoCoreVideoServiceListPublishedVideoResponse,
+    SvapiListPublishedVideoResponse,
     unknown,
     void,
     SvapiListPublishedVideoRequest,
@@ -2489,7 +2182,7 @@ export const ShortVideoCoreVideoServiceListPublishedVideo = (
   props: ShortVideoCoreVideoServiceListPublishedVideoProps
 ) => (
   <Mutate<
-    ShortVideoCoreVideoServiceListPublishedVideoResponse,
+    SvapiListPublishedVideoResponse,
     unknown,
     void,
     SvapiListPublishedVideoRequest,
@@ -2503,7 +2196,7 @@ export const ShortVideoCoreVideoServiceListPublishedVideo = (
 
 export type UseShortVideoCoreVideoServiceListPublishedVideoProps = Omit<
   UseMutateProps<
-    ShortVideoCoreVideoServiceListPublishedVideoResponse,
+    SvapiListPublishedVideoResponse,
     unknown,
     void,
     SvapiListPublishedVideoRequest,
@@ -2519,28 +2212,16 @@ export const useShortVideoCoreVideoServiceListPublishedVideo = (
   props: UseShortVideoCoreVideoServiceListPublishedVideoProps
 ) =>
   useMutate<
-    ShortVideoCoreVideoServiceListPublishedVideoResponse,
+    SvapiListPublishedVideoResponse,
     unknown,
     void,
     SvapiListPublishedVideoRequest,
     void
   >("POST", `/video/list`, props);
 
-export interface ShortVideoCoreVideoServicePreSign4UploadVideoResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiPreSign4UploadVideoResponse;
-}
-
 export type ShortVideoCoreVideoServicePreSign4UploadVideoProps = Omit<
   MutateProps<
-    ShortVideoCoreVideoServicePreSign4UploadVideoResponse,
+    SvapiPreSign4UploadVideoResponse,
     unknown,
     void,
     SvapiPreSign4UploadVideoRequest,
@@ -2556,7 +2237,7 @@ export const ShortVideoCoreVideoServicePreSign4UploadVideo = (
   props: ShortVideoCoreVideoServicePreSign4UploadVideoProps
 ) => (
   <Mutate<
-    ShortVideoCoreVideoServicePreSign4UploadVideoResponse,
+    SvapiPreSign4UploadVideoResponse,
     unknown,
     void,
     SvapiPreSign4UploadVideoRequest,
@@ -2570,7 +2251,7 @@ export const ShortVideoCoreVideoServicePreSign4UploadVideo = (
 
 export type UseShortVideoCoreVideoServicePreSign4UploadVideoProps = Omit<
   UseMutateProps<
-    ShortVideoCoreVideoServicePreSign4UploadVideoResponse,
+    SvapiPreSign4UploadVideoResponse,
     unknown,
     void,
     SvapiPreSign4UploadVideoRequest,
@@ -2586,24 +2267,12 @@ export const useShortVideoCoreVideoServicePreSign4UploadVideo = (
   props: UseShortVideoCoreVideoServicePreSign4UploadVideoProps
 ) =>
   useMutate<
-    ShortVideoCoreVideoServicePreSign4UploadVideoResponse,
+    SvapiPreSign4UploadVideoResponse,
     unknown,
     void,
     SvapiPreSign4UploadVideoRequest,
     void
   >("POST", `/video/upload`, props);
-
-export interface ShortVideoCoreVideoServiceGetVideoByIdResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiGetVideoByIdResponse;
-}
 
 export interface ShortVideoCoreVideoServiceGetVideoByIdPathParams {
   /**
@@ -2614,7 +2283,7 @@ export interface ShortVideoCoreVideoServiceGetVideoByIdPathParams {
 
 export type ShortVideoCoreVideoServiceGetVideoByIdProps = Omit<
   GetProps<
-    ShortVideoCoreVideoServiceGetVideoByIdResponse,
+    SvapiGetVideoByIdResponse,
     unknown,
     void,
     ShortVideoCoreVideoServiceGetVideoByIdPathParams
@@ -2631,7 +2300,7 @@ export const ShortVideoCoreVideoServiceGetVideoById = ({
   ...props
 }: ShortVideoCoreVideoServiceGetVideoByIdProps) => (
   <Get<
-    ShortVideoCoreVideoServiceGetVideoByIdResponse,
+    SvapiGetVideoByIdResponse,
     unknown,
     void,
     ShortVideoCoreVideoServiceGetVideoByIdPathParams
@@ -2643,7 +2312,7 @@ export const ShortVideoCoreVideoServiceGetVideoById = ({
 
 export type UseShortVideoCoreVideoServiceGetVideoByIdProps = Omit<
   UseGetProps<
-    ShortVideoCoreVideoServiceGetVideoByIdResponse,
+    SvapiGetVideoByIdResponse,
     unknown,
     void,
     ShortVideoCoreVideoServiceGetVideoByIdPathParams
@@ -2660,7 +2329,7 @@ export const useShortVideoCoreVideoServiceGetVideoById = ({
   ...props
 }: UseShortVideoCoreVideoServiceGetVideoByIdProps) =>
   useGet<
-    ShortVideoCoreVideoServiceGetVideoByIdResponse,
+    SvapiGetVideoByIdResponse,
     unknown,
     void,
     ShortVideoCoreVideoServiceGetVideoByIdPathParams
@@ -2670,21 +2339,9 @@ export const useShortVideoCoreVideoServiceGetVideoById = ({
     { pathParams: { videoId }, ...props }
   );
 
-export interface FileServicePreSignUploadingPublicFileResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiPreSignUploadPublicFileResponse;
-}
-
 export type FileServicePreSignUploadingPublicFileProps = Omit<
   MutateProps<
-    FileServicePreSignUploadingPublicFileResponse,
+    SvapiPreSignUploadPublicFileResponse,
     unknown,
     void,
     SvapiPreSignUploadPublicFileRequest,
@@ -2697,7 +2354,7 @@ export const FileServicePreSignUploadingPublicFile = (
   props: FileServicePreSignUploadingPublicFileProps
 ) => (
   <Mutate<
-    FileServicePreSignUploadingPublicFileResponse,
+    SvapiPreSignUploadPublicFileResponse,
     unknown,
     void,
     SvapiPreSignUploadPublicFileRequest,
@@ -2711,7 +2368,7 @@ export const FileServicePreSignUploadingPublicFile = (
 
 export type UseFileServicePreSignUploadingPublicFileProps = Omit<
   UseMutateProps<
-    FileServicePreSignUploadingPublicFileResponse,
+    SvapiPreSignUploadPublicFileResponse,
     unknown,
     void,
     SvapiPreSignUploadPublicFileRequest,
@@ -2724,28 +2381,16 @@ export const useFileServicePreSignUploadingPublicFile = (
   props: UseFileServicePreSignUploadingPublicFileProps
 ) =>
   useMutate<
-    FileServicePreSignUploadingPublicFileResponse,
+    SvapiPreSignUploadPublicFileResponse,
     unknown,
     void,
     SvapiPreSignUploadPublicFileRequest,
     void
   >("POST", `file`, props);
 
-export interface FileServiceReportPublicFileUploadedResponse {
-  /**
-   * Status code. Zero means success.
-   */
-  code?: number;
-  /**
-   * Status message. Could be displayed to user.
-   */
-  msg?: string;
-  data?: SvapiReportPublicFileUploadedResponse;
-}
-
 export type FileServiceReportPublicFileUploadedProps = Omit<
   MutateProps<
-    FileServiceReportPublicFileUploadedResponse,
+    SvapiReportPublicFileUploadedResponse,
     unknown,
     void,
     SvapiReportPublicFileUploadedRequest,
@@ -2758,7 +2403,7 @@ export const FileServiceReportPublicFileUploaded = (
   props: FileServiceReportPublicFileUploadedProps
 ) => (
   <Mutate<
-    FileServiceReportPublicFileUploadedResponse,
+    SvapiReportPublicFileUploadedResponse,
     unknown,
     void,
     SvapiReportPublicFileUploadedRequest,
@@ -2772,7 +2417,7 @@ export const FileServiceReportPublicFileUploaded = (
 
 export type UseFileServiceReportPublicFileUploadedProps = Omit<
   UseMutateProps<
-    FileServiceReportPublicFileUploadedResponse,
+    SvapiReportPublicFileUploadedResponse,
     unknown,
     void,
     SvapiReportPublicFileUploadedRequest,
@@ -2785,7 +2430,7 @@ export const useFileServiceReportPublicFileUploaded = (
   props: UseFileServiceReportPublicFileUploadedProps
 ) =>
   useMutate<
-    FileServiceReportPublicFileUploadedResponse,
+    SvapiReportPublicFileUploadedResponse,
     unknown,
     void,
     SvapiReportPublicFileUploadedRequest,

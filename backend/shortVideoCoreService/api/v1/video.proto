@@ -34,6 +34,13 @@ service VideoService {
     };
 
     rpc GetVideoByIdList(GetVideoByIdListRequest) returns (GetVideoByIdListResponse) {};
+    
+    rpc SearchVideo(SearchVideoRequest) returns (SearchVideoResponse) {
+        option (google.api.http) = {
+            post: "/v1/video/search"
+            body: "*"
+        };
+    };
 }
 
 message Author {
@@ -115,6 +122,18 @@ message GetVideoByIdListRequest {
 }
 
 message GetVideoByIdListResponse {
+    Metadata meta = 1;
+    repeated Video videos = 2;
+}
+
+message SearchVideoRequest {
+    string query = 1 [(validate.rules).string.min_len = 1]; // 搜索关键词
+    int64 user_id = 2 [(validate.rules).int64 = {gt: 0}];
+    int64 latest_time = 3; // 可选参数，限制返回视频的最新投稿时间戳，精确到秒，不填表示当前时间
+    int64 search_num = 4 [(validate.rules).int64 = {gt: 0}]; // 返回视频的数量
+}
+
+message SearchVideoResponse {
     Metadata meta = 1;
     repeated Video videos = 2;
 }

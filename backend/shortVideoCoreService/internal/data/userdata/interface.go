@@ -2,6 +2,7 @@ package userdata
 
 import (
 	"context"
+
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/model"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/query"
 )
@@ -12,6 +13,7 @@ type IUserRepo interface {
 	FindByID(ctx context.Context, tx *query.Query, id int64) (*model.User, error)
 	FindByAccountID(ctx context.Context, tx *query.Query, accountID int64) (*model.User, error)
 	FindByIds(ctx context.Context, tx *query.Query, ids []int64) ([]*model.User, error)
+	SearchUserByName(ctx context.Context, tx *query.Query, name string, limit int) ([]*model.User, error)
 }
 
 var _ IUserRepo = (*UserRepo)(nil)

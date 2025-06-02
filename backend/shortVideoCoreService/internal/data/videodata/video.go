@@ -2,10 +2,11 @@ package videodata
 
 import (
 	"context"
+	"time"
+
 	infra_dto "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/dto"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/model"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/query"
-	"time"
 )
 
 type VideoRepo struct {
@@ -74,6 +75,18 @@ func (r *VideoRepo) GetVideoFeed(ctx context.Context, tx *query.Query, userId, l
 		Where(tx.Video.CreatedAt.Lt(time.Unix(latestTime, 0).UTC())).
 		Limit(int(num)).
 		Order(tx.Video.ID.Desc()).Find()
+	if err != nil {
+		return nil, err
+	}
+	return videos, nil
+}
+
+func (r *VideoRepo) SearchVideo(ctx context.Context, tx *query.Query, query string, limit int) ([]*model.Video, error) {
+	videos, err := tx.Video.WithContext(ctx).Where(
+		tx.Video.Title.Like("%" + query + "%"),
+	).Or(
+		tx.Video.Description.Like("%" + query + "%"),
+	).Limit(limit).Order(tx.Video.ID.Desc()).Find()
 	if err != nil {
 		return nil, err
 	}

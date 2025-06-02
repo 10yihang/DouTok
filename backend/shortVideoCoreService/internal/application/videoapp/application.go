@@ -2,6 +2,7 @@ package videoapp
 
 import (
 	"context"
+
 	v1 "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1"
 	service_dto "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/application/dto"
 	domain_dto "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/dto"
@@ -109,5 +110,30 @@ func (s *VideoApplication) GetVideoByIdList(ctx context.Context, in *v1.GetVideo
 	return &v1.GetVideoByIdListResponse{
 		Meta:   utils.GetSuccessMeta(),
 		Videos: result,
+	}, nil
+}
+
+func (s *VideoApplication) SearchVideo(ctx context.Context, in *v1.SearchVideoRequest) (*v1.SearchVideoResponse, error) {
+	limit := 10 // 默认限制
+	if in.SearchNum > 0 {
+		limit = int(in.SearchNum)
+	}
+
+	videos, err := s.videoUsecase.SearchVideo(ctx, in.Query, limit)
+	if err != nil {
+		log.Context(ctx).Errorf("failed to search video: %v", err)
+		return &v1.SearchVideoResponse{
+			Meta: utils.GetMetaWithError(err),
+		}, nil
+	}
+
+	var videoList []*v1.Video
+	for _, video := range videos {
+		videoList = append(videoList, video.ToPB())
+	}
+
+	return &v1.SearchVideoResponse{
+		Meta:   utils.GetSuccessMeta(),
+		Videos: videoList,
 	}, nil
 }

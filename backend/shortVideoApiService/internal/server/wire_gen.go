@@ -16,6 +16,7 @@ import (
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/applications/videoapp"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/adapter/baseadapter"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/adapter/svcoreadapter"
+	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/service/searchservice"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/service/videoservice"
 )
 
@@ -66,4 +67,24 @@ func initFollowApp() *followapp.Application {
 	adapter := svcoreadapter.New()
 	application := followapp.New(adapter)
 	return application
+}
+
+func initSearchService() *searchservice.Service {
+	adapter := baseadapter.New()
+	svcoreadapterAdapter := svcoreadapter.New()
+	application := userapp.New(adapter, svcoreadapterAdapter)
+	videoService := videoservice.New(svcoreadapterAdapter)
+	videoappApplication := videoapp.New(adapter, svcoreadapterAdapter, videoService)
+	service := searchservice.New(application, videoappApplication)
+	return service
+}
+
+func initSearchApp() *searchservice.Service {
+	adapter := baseadapter.New()
+	svcoreadapterAdapter := svcoreadapter.New()
+	application := userapp.New(adapter, svcoreadapterAdapter)
+	videoService := videoservice.New(svcoreadapterAdapter)
+	videoappApplication := videoapp.New(adapter, svcoreadapterAdapter, videoService)
+	service := searchservice.New(application, videoappApplication)
+	return service
 }

@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"github.com/cloudzenith/DouTok/backend/gopkgs/middlewares/httprespwrapper"
+
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/api/svapi"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/middlewares"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/utils/claims"
@@ -19,6 +19,7 @@ func TokenParseWhiteList() selector.MatchFunc {
 	whileList["/svapi.UserService/GetVerificationCode"] = struct{}{}
 	whileList["/svapi.UserService/Register"] = struct{}{}
 	whileList["/svapi.UserService/Login"] = struct{}{}
+	whileList["/svapi.SearchService/Search"] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whileList[operation]; ok {
 			return false
@@ -30,6 +31,7 @@ func TokenParseWhiteList() selector.MatchFunc {
 
 func NewHttpServer() *http.Server {
 	var opts = []http.ServerOption{
+		middlewares.ResponseEncoderWrapper(), // 使用自定义响应编码器
 		http.Filter(
 			//跨域处理
 			handlers.CORS(
@@ -51,7 +53,7 @@ func NewHttpServer() *http.Server {
 					}),
 				),
 			).Match(TokenParseWhiteList()).Build(),
-			httprespwrapper.HttpResponseWrapper(),
+			// httprespwrapper.HttpResponseWrapper(), // 注释掉避免类型转换错误
 		),
 		http.Address("0.0.0.0:22000"),
 	}
@@ -65,5 +67,6 @@ func NewHttpServer() *http.Server {
 	svapi.RegisterCommentServiceHTTPServer(srv, initCommentApp())
 	svapi.RegisterFavoriteServiceHTTPServer(srv, initFavoriteApp())
 	svapi.RegisterFollowServiceHTTPServer(srv, initFollowApp())
+	svapi.RegisterSearchServiceHTTPServer(srv, initSearchApp())
 	return srv
-} 
+}

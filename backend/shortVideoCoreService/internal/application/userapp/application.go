@@ -2,6 +2,7 @@ package userapp
 
 import (
 	"context"
+
 	v1 "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/dto"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/domain/entity"
@@ -89,5 +90,34 @@ func (s *UserApplication) GetUserByIdList(ctx context.Context, in *v1.GetUserByI
 	return &v1.GetUserByIdListResponse{
 		Meta:     utils.GetSuccessMeta(),
 		UserList: users,
+	}, nil
+}
+
+func (s *UserApplication) SearchUser(ctx context.Context, in *v1.SearchUserRequest) (*v1.SearchUserResponse, error) {
+	limit := 10 // 默认限制
+	if in.Pagination != nil && in.Pagination.Size > 0 {
+		limit = int(in.Pagination.Size)
+	}
+
+	users, err := s.userUsecase.SearchUser(ctx, in.Query, limit)
+	if err != nil {
+		log.Context(ctx).Errorf("failed to search user: %v", err)
+		return &v1.SearchUserResponse{
+			Meta: utils.GetMetaWithError(err),
+		}, nil
+	}
+
+	var userList []*v1.User
+	for _, user := range users {
+		userList = append(userList, user.ToUserResp())
+	}
+
+	return &v1.SearchUserResponse{
+		Meta:     utils.GetSuccessMeta(),
+		UserList: userList,
+		Pagination: &v1.PaginationResponse{
+			Page:  1,
+			Count: int32(len(userList)),
+		},
 	}, nil
 }

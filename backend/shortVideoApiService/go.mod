@@ -12,6 +12,7 @@ require (
 	github.com/golang-jwt/jwt/v5 v5.2.1
 	github.com/google/wire v0.6.0
 	github.com/gorilla/handlers v1.5.2
+	github.com/zhenghaoz/gorse v0.4.16
 	google.golang.org/genproto/googleapis/api v0.0.0-20241007155032-5fefd90f89a9
 	google.golang.org/protobuf v1.35.1
 )
@@ -75,7 +76,6 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/redis/go-redis/v9 v9.6.1 // indirect
-	github.com/rogpeppe/go-internal v1.13.1 // indirect
 	github.com/rs/xid v1.5.0 // indirect
 	github.com/samber/lo v1.46.0 // indirect
 	github.com/sirupsen/logrus v1.9.3 // indirect
@@ -83,7 +83,6 @@ require (
 	github.com/tidwall/match v1.1.1 // indirect
 	github.com/tidwall/pretty v1.2.1 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
-	github.com/zhenghaoz/gorse v0.4.16 // indirect
 	go.etcd.io/etcd/api/v3 v3.5.15 // indirect
 	go.etcd.io/etcd/client/pkg/v3 v3.5.15 // indirect
 	go.etcd.io/etcd/client/v3 v3.5.15 // indirect
@@ -113,3 +112,5 @@ require (
 )
 
 replace github.com/cloudzenith/DouTok/backend/gopkgs v0.0.9 => github.com/cloudzenith/DouTok/backend/gopkgs v0.0.0-20241103032449-fe0152ac484a
+
+replace github.com/cloudzenith/DouTok/backend/shortVideoCoreService => ../shortVideoCoreService

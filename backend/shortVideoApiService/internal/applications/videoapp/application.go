@@ -183,4 +183,40 @@ func (a *Application) PreSign4UploadCover(ctx context.Context, request *svapi.Pr
 	}, nil
 }
 
+func (a *Application) SearchVideo(ctx context.Context, query string, pagination *svapi.PaginationRequest) ([]*svapi.Video, error) {
+	// 获取用户ID，如果失败则使用0（未登录用户）
+	userId, err := claims.GetUserId(ctx)
+	if err != nil {
+		userId = 0 // 未登录用户
+	}
+
+	// 调用核心服务搜索视频
+	videoList, err := a.core.SearchVideo(ctx, query, userId, 0, int64(pagination.Size))
+	if err != nil {
+		log.Context(ctx).Errorf("failed to search video: %v", err)
+		return nil, err
+	}
+
+	var result []*svapi.Video
+	for _, video := range videoList {
+		result = append(result, &svapi.Video{
+			Id:            video.Id,
+			Title:         video.Title,
+			PlayUrl:       video.PlayUrl,
+			CoverUrl:      video.CoverUrl,
+			FavoriteCount: video.FavoriteCount,
+			CommentCount:  video.CommentCount,
+			IsFavorite:    video.IsFavorite > 0, // 将 int64 转换为 bool
+			Author: &svapi.VideoAuthor{
+				Id:          video.Author.Id,
+				Name:        video.Author.Name,
+				Avatar:      video.Author.Avatar,
+				IsFollowing: video.Author.IsFollowing > 0, // 将 int64 转换为 bool
+			},
+		})
+	}
+
+	return result, nil
+}
+
 var _ svapi.ShortVideoCoreVideoServiceHTTPServer = (*Application)(nil)

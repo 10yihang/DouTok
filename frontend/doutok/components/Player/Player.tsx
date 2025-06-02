@@ -106,6 +106,7 @@ export function Player(props: PlayerProps) {
   const playerRef = useRef();
 
   const [haveSource, setHaveSource] = useState(false);
+  const [playerReady, setPlayerReady] = useState(false);
   // 能否关注
   const [isCouldFollow, setIsCouldFollow] = useState(props.isCouldFollow);
   // 是否已关注
@@ -118,6 +119,32 @@ export function Player(props: PlayerProps) {
   useEffect(() => {
     setHaveSource(true);
   }, []);
+
+  // 监听播放器实例状态
+  useEffect(() => {
+    const checkPlayerReady = () => {
+      const currentPlayer = (playerRef.current as any)?.plyr;
+      if (currentPlayer && typeof currentPlayer.play === 'function') {
+        setPlayerReady(true);
+      } else {
+        setPlayerReady(false);
+      }
+    };
+
+    checkPlayerReady();
+    // 定期检查播放器状态，直到就绪
+    const interval = setInterval(checkPlayerReady, 100);
+
+    // 5秒后停止检查
+    const timeout = setTimeout(() => {
+      clearInterval(interval);
+    }, 5000);
+
+    return () => {
+      clearInterval(interval);
+      clearTimeout(timeout);
+    };
+  }, [videoSource]);
 
   useEffect(() => {
     setVideoSource(props.src as string);
@@ -156,32 +183,40 @@ export function Player(props: PlayerProps) {
         case 'ArrowDown':
           event.preventDefault();
           props.onNextVideo?.();
-          break;
-        case ' ':
+          break; case ' ':
           event.preventDefault();
+          // 只有在播放器就绪时才尝试控制播放
+          if (!playerReady) {
+            console.warn('Player not ready yet');
+            return;
+          }
+
           // 获取当前plyr实例并切换播放状态
           const currentPlayer = (playerRef.current as any)?.plyr;
-          if (currentPlayer) {
-            if (currentPlayer.playing) {
-              currentPlayer.pause();
-            } else {
-              currentPlayer.play();
+          if (currentPlayer && typeof currentPlayer.play === 'function' && typeof currentPlayer.pause === 'function') {
+            try {
+              if (currentPlayer.playing) {
+                currentPlayer.pause();
+              } else {
+                currentPlayer.play().catch((error: any) => {
+                  console.warn('Error playing video:', error);
+                });
+              }
+            } catch (error) {
+              console.warn('Error controlling video playback:', error);
             }
           }
           break;
       }
-    };
-
-    document.addEventListener('keydown', handleKeyDown);
+    }; document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [props.displaying, props.onPreviousVideo, props.onNextVideo]);
-  // 处理视频切换时停止旧视频播放
+  }, [props.displaying, props.onPreviousVideo, props.onNextVideo, playerReady]);// 处理视频切换时停止旧视频播放
   useEffect(() => {
     const currentPlayer = (playerRef.current as any)?.plyr;
 
-    if (currentPlayer) {
+    if (currentPlayer && typeof currentPlayer.pause === 'function') {
       if (props.displaying) {
         // 当视频变为显示状态时，确保其他视频都已停止
         // 这里我们不自动播放，让用户决定是否播放
@@ -192,9 +227,13 @@ export function Player(props: PlayerProps) {
             currentPlayer.pause();
           }
           // 重置播放位置到开始
-          currentPlayer.currentTime = 0;
+          if (typeof currentPlayer.currentTime !== 'undefined') {
+            currentPlayer.currentTime = 0;
+          }
           // 确保视频完全停止
-          currentPlayer.stop();
+          if (typeof currentPlayer.stop === 'function') {
+            currentPlayer.stop();
+          }
         } catch (error) {
           // 忽略可能的错误，例如视频尚未加载完成
           console.warn('Error stopping video:', error);
@@ -202,18 +241,21 @@ export function Player(props: PlayerProps) {
       }
     }
   }, [props.displaying, props.src]);
-
   // 添加一个清理函数，确保组件卸载时停止视频
   useEffect(() => {
     return () => {
       const currentPlayer = (playerRef.current as any)?.plyr;
-      if (currentPlayer) {
+      if (currentPlayer && typeof currentPlayer.pause === 'function') {
         try {
           if (currentPlayer.playing) {
             currentPlayer.pause();
           }
-          currentPlayer.currentTime = 0;
-          currentPlayer.stop();
+          if (typeof currentPlayer.currentTime !== 'undefined') {
+            currentPlayer.currentTime = 0;
+          }
+          if (typeof currentPlayer.stop === 'function') {
+            currentPlayer.stop();
+          }
         } catch (error) {
           console.warn('Error cleaning up video:', error);
         }

@@ -2,6 +2,7 @@ package userdata
 
 import (
 	"context"
+
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/model"
 	"github.com/cloudzenith/DouTok/backend/shortVideoCoreService/internal/infrastructure/persistence/query"
 )
@@ -44,6 +45,14 @@ func (r *UserRepo) FindByAccountID(ctx context.Context, tx *query.Query, account
 
 func (r *UserRepo) FindByIds(ctx context.Context, tx *query.Query, ids []int64) ([]*model.User, error) {
 	users, err := tx.User.WithContext(ctx).Where(tx.User.ID.In(ids...)).Find()
+	if err != nil {
+		return nil, err
+	}
+	return users, nil
+}
+
+func (r *UserRepo) SearchUserByName(ctx context.Context, tx *query.Query, name string, limit int) ([]*model.User, error) {
+	users, err := tx.User.WithContext(ctx).Where(tx.User.Name.Like("%" + name + "%")).Limit(limit).Find()
 	if err != nil {
 		return nil, err
 	}
