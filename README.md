@@ -1,42 +1,38 @@
-# DouTok
-一个开源的 web 端的短视频应用，采用微服务架构（React & Go），DouTok 正处在开发初期，目前已经完成了基础的用户注册、登录、视频上传、视频列表展示、评论、点赞、收藏等功能。
+# 抖声 (DouTok)
 
-当然，DouTok 还有很多功能没有实现，比如视频推荐、消息推送、私信等功能，这些功能将会在后续的开发中逐步实现。
+抖声是一个仿抖音的短视频社交应用程序。它包含一个后端服务和一个前端应用程序。
 
-无论你是**前端开发者**还是**后端开发者**，都可以参与到 DouTok 的开发中来，我们欢迎你的加入！
+## 项目结构
 
-🔥 如何参与贡献：https://cloudzenith.github.io/DouTok/community
+```
+DouTok/
+├── backend/         # 后端服务
+├── frontend/        # 前端应用程序
+├── env/             # 开发和部署所需的环境配置文件和脚本
+├── sql/             # 数据库初始化和迁移脚本
+├── imgs/            # 项目相关的图片资源
+├── grafana.ini      # Grafana 配置文件
+├── LICENSE          # 项目许可证
+└── README.md        # 项目主 README
+```
 
-🐧 交流群2群: 446397231
+## 主要技术栈
 
-📺 B站讲解：[白泽talk](https://space.bilibili.com/10399934)
-
-🔑 开源学习仓库：[go-learning](https://github.com/BaiZe1998/go-learning)
+*   **后端:** Go, Gin, gRPC, Kitex, GORM, Consul, Jaeger, Prometheus, Grafana, Loki, RocketMQ, Redis, MySQL, MinIO, Gorse (推荐系统)
+*   **前端:** TypeScript, Next.js, React, Tailwind CSS
+*   **部署运维:** Docker, Docker Compose, Makefile
 
 ## 快速开始
-所有信息参考文档站（非常详细）：
-<https://cloudzenith.github.io/DouTok/docs/quickstart/>
 
-## 项目架构
-![DouTok](imgs/DouTok.jpg)
+有关如何设置和运行后端及前端应用程序的详细说明，请参阅各自目录中的 README 文件：
 
-## 主要目录
-这是一个巨仓项目，所有的服务都在这个仓库中，目录结构如下：
+*   [后端 README](./backend/README.md)
+*   [前端 README](./frontend/README.md)
 
-- backend: 后端服务
-- frontend: 前端服务
-- test: 测试
-- deploy: 部署
-- docs-site: 文档站
-- env: 依赖环境部署
-- sql: 数据库脚本
+## 贡献
 
-## 页面展示
-- 上传视频
-![DouTok](imgs/info.png)
+欢迎为此项目做出贡献！请随时提交 Pull Request 或创建 Issue。
 
-- 浏览视频
-![DouTok](imgs/video.png)
+## 许可证
 
-- 评论 & 点赞 & 关注
-![DouTok](imgs/comment.png)
+该项目根据 [LICENSE](./LICENSE) 文件中的条款获得许可。
