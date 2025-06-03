@@ -119,26 +119,45 @@ export function Player(props: PlayerProps) {
   useEffect(() => {
     setHaveSource(true);
   }, []);
-
   // 监听播放器实例状态
   useEffect(() => {
     const checkPlayerReady = () => {
       const currentPlayer = (playerRef.current as any)?.plyr;
+      const videoElement = playerRef.current as unknown as HTMLVideoElement;
+
+      // console.log('检查播放器状态:', {
+      //   hasPlayer: !!currentPlayer,
+      //   hasVideoElement: !!videoElement,
+      //   videoSrc: videoElement?.src,
+      //   playerReady: currentPlayer?.ready,
+      //   playerMedia: currentPlayer?.media,
+      //   videoTagName: videoElement?.tagName
+      // });
+
       if (currentPlayer && typeof currentPlayer.play === 'function') {
         setPlayerReady(true);
+        return true;
       } else {
         setPlayerReady(false);
+        return false;
       }
     };
 
+    // 立即检查
     checkPlayerReady();
-    // 定期检查播放器状态，直到就绪
-    const interval = setInterval(checkPlayerReady, 100);
 
-    // 5秒后停止检查
+    // 定期检查播放器状态，直到就绪
+    const interval = setInterval(() => {
+      if (checkPlayerReady()) {
+        clearInterval(interval);
+      }
+    }, 100);
+
+    // 10秒后停止检查
     const timeout = setTimeout(() => {
       clearInterval(interval);
-    }, 5000);
+      console.log('播放器初始化超时');
+    }, 10000);
 
     return () => {
       clearInterval(interval);
@@ -183,81 +202,174 @@ export function Player(props: PlayerProps) {
         case 'ArrowDown':
           event.preventDefault();
           props.onNextVideo?.();
-          break; case ' ':
+          break;
+        case ' ':
           event.preventDefault();
-          // 只有在播放器就绪时才尝试控制播放
-          if (!playerReady) {
-            console.warn('Player not ready yet');
-            return;
+
+          // 获取当前plyr实例和原生video元素
+          const currentPlayer = (playerRef.current as any)?.plyr;
+          const videoElement = playerRef.current as unknown as HTMLVideoElement;
+
+          // 方案1: 尝试使用 plyr（如果可用且准备好）
+          if (currentPlayer && currentPlayer.ready && currentPlayer.media) {
+            try {
+              if (currentPlayer.media.paused) {
+                currentPlayer.play();
+              } else {
+                currentPlayer.pause();
+              }
+              console.log("使用 Plyr 播放器控制视频");
+              return;
+            } catch (error) {
+              // 静默失败，尝试下一个方案
+            }
           }
 
-          // 获取当前plyr实例并切换播放状态
-          const currentPlayer = (playerRef.current as any)?.plyr;
-          if (currentPlayer && typeof currentPlayer.play === 'function' && typeof currentPlayer.pause === 'function') {
+          // 方案2: 直接使用原生 video 元素（性能最优）
+          if (videoElement && videoElement.tagName === 'VIDEO') {
             try {
-              if (currentPlayer.playing) {
-                currentPlayer.pause();
+              if (videoElement.paused) {
+                const playPromise = videoElement.play();
+                if (playPromise) {
+                  playPromise.catch(() => {
+                    // 静默处理播放失败
+                  });
+                }
               } else {
-                currentPlayer.play().catch((error: any) => {
-                  console.warn('Error playing video:', error);
-                });
+                videoElement.pause();
               }
+              console.log("使用原生 video 元素控制视频");
+              return;
             } catch (error) {
-              console.warn('Error controlling video playback:', error);
+              // 静默失败，尝试下一个方案
             }
+          }
+
+          // 方案3: 只在前两个方案都失败时才使用DOM查询（性能开销较大）
+          try {
+            const allVideos = document.querySelectorAll('video');
+            if (allVideos.length > 0) {
+              // 优先查找与当前 src 匹配的视频
+              let targetVideo: HTMLVideoElement | null = null;
+
+              if (props.src) {
+                for (let i = 0; i < allVideos.length; i++) {
+                  const video = allVideos[i] as HTMLVideoElement;
+                  if (video.src === props.src || video.currentSrc === props.src) {
+                    targetVideo = video;
+                    break;
+                  }
+                }
+              }
+
+              // 如果没找到匹配的，使用第一个视频
+              if (!targetVideo && allVideos.length > 0) {
+                targetVideo = allVideos[0] as HTMLVideoElement;
+              }
+
+              if (targetVideo) {
+                if (targetVideo.paused) {
+                  const playPromise = targetVideo.play();
+                  if (playPromise) {
+                    playPromise.catch(() => {
+                      // 静默处理播放失败
+                    });
+                  }
+                } else {
+                  targetVideo.pause();
+                }
+              }
+            }
+            console.log("使用 DOM 查询控制视频");
+          } catch (error) {
+            // 所有方案都失败，静默处理
           }
           break;
       }
-    }; document.addEventListener('keydown', handleKeyDown);
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
     return () => {
       document.removeEventListener('keydown', handleKeyDown);
     };
-  }, [props.displaying, props.onPreviousVideo, props.onNextVideo, playerReady]);// 处理视频切换时停止旧视频播放
+  }, [props.displaying, props.onPreviousVideo, props.onNextVideo, playerReady]);
+  // 处理视频切换时停止旧视频播放
   useEffect(() => {
     const currentPlayer = (playerRef.current as any)?.plyr;
+    const videoElement = playerRef.current as unknown as HTMLVideoElement;
 
-    if (currentPlayer && typeof currentPlayer.pause === 'function') {
-      if (props.displaying) {
-        // 当视频变为显示状态时，确保其他视频都已停止
-        // 这里我们不自动播放，让用户决定是否播放
-      } else {
-        // 当视频变为非显示状态时，立即停止播放
+    if (props.displaying) {
+      // 当视频变为显示状态时，暂停其他所有视频
+      try {
+        const allVideos = document.querySelectorAll('video');
+        for (let i = 0; i < allVideos.length; i++) {
+          const video = allVideos[i] as HTMLVideoElement;
+          // 暂停其他视频（不是当前视频的）
+          if (video !== videoElement && !video.paused) {
+            video.pause();
+          }
+        }
+      } catch (error) {
+        // 静默处理错误
+      }
+    } else {
+      // 当视频变为非显示状态时，立即停止播放
+      // 方案1: 使用 plyr
+      if (currentPlayer && typeof currentPlayer.pause === 'function') {
         try {
-          if (currentPlayer.playing) {
+          if (currentPlayer.playing || !currentPlayer.paused) {
             currentPlayer.pause();
           }
           // 重置播放位置到开始
           if (typeof currentPlayer.currentTime !== 'undefined') {
             currentPlayer.currentTime = 0;
           }
-          // 确保视频完全停止
-          if (typeof currentPlayer.stop === 'function') {
-            currentPlayer.stop();
-          }
         } catch (error) {
-          // 忽略可能的错误，例如视频尚未加载完成
-          console.warn('Error stopping video:', error);
+          // 静默处理错误
+        }
+      }
+
+      // 方案2: 直接使用原生video元素
+      if (videoElement && videoElement.tagName === 'VIDEO') {
+        try {
+          if (!videoElement.paused) {
+            videoElement.pause();
+          }
+          videoElement.currentTime = 0;
+        } catch (error) {
+          // 静默处理错误
         }
       }
     }
-  }, [props.displaying, props.src]);
-  // 添加一个清理函数，确保组件卸载时停止视频
+  }, [props.displaying, props.src]);  // 添加一个清理函数，确保组件卸载时停止视频
   useEffect(() => {
     return () => {
       const currentPlayer = (playerRef.current as any)?.plyr;
+      const videoElement = playerRef.current as unknown as HTMLVideoElement;
+
+      // 方案1: 使用 plyr
       if (currentPlayer && typeof currentPlayer.pause === 'function') {
         try {
-          if (currentPlayer.playing) {
+          if (currentPlayer.playing || !currentPlayer.paused) {
             currentPlayer.pause();
           }
           if (typeof currentPlayer.currentTime !== 'undefined') {
             currentPlayer.currentTime = 0;
           }
-          if (typeof currentPlayer.stop === 'function') {
-            currentPlayer.stop();
-          }
         } catch (error) {
-          console.warn('Error cleaning up video:', error);
+          // 静默处理错误
+        }
+      }
+
+      // 方案2: 使用原生video元素
+      if (videoElement && videoElement.tagName === 'VIDEO') {
+        try {
+          if (!videoElement.paused) {
+            videoElement.pause();
+          }
+          videoElement.currentTime = 0;
+        } catch (error) {
+          // 静默处理错误
         }
       }
     };

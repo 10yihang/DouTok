@@ -32,7 +32,7 @@ export function MainSearch() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SvapiContentSearchResponse | null>(null);
   const [loading, setLoading] = useState(false);
-  
+
   // 播放器状态
   const [openPlayer, setOpenPlayer] = useState(false);
   const [playUrl, setPlayUrl] = useState("");
