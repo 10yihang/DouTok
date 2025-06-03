@@ -35,7 +35,7 @@ func (vt *VideoTagger) ExtractTags(title, description string) []string {
 	}
 
 	// 提取话题标签 #tag
-	hashtagRegex := regexp.MustCompile(`#([a-zA-Z0-9\u4e00-\u9fa5]+)`)
+	hashtagRegex := regexp.MustCompile(`#([a-zA-Z0-9\x{4e00}-\x{9fa5}]+)`)
 	hashtags := hashtagRegex.FindAllStringSubmatch(content, -1)
 	for _, match := range hashtags {
 		if len(match) > 1 {
