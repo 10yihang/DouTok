@@ -9,6 +9,7 @@ import { UserOutlined, PlayCircleOutlined } from "@ant-design/icons";
 import "./MainSearch.css";
 import { SearchOutlined } from "@ant-design/icons";
 import { useSearchServiceSearch, SvapiContentSearchRequest, SvapiContentSearchResponse, SvapiUser, SvapiVideo } from "../../api/svapi/api";
+import { PlayerModal } from "@/components/PlayerModal/PlayerModal";
 
 const { Text, Title } = Typography;
 
@@ -31,6 +32,13 @@ export function MainSearch() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SvapiContentSearchResponse | null>(null);
   const [loading, setLoading] = useState(false);
+  
+  // 播放器状态
+  const [openPlayer, setOpenPlayer] = useState(false);
+  const [playUrl, setPlayUrl] = useState("");
+  const [videoInfo, setVideoInfo] = useState<SvapiVideo>();
+  const [publisher, setPublisher] = useState("");
+  const [description, setDescription] = useState("");
 
   const searchMutate = useSearchServiceSearch({}); const onSearch: SearchProps["onSearch"] = async (value, _e, info) => {
     console.log(info?.source, value);
@@ -99,11 +107,22 @@ export function MainSearch() {
           {/* 视频搜索结果 */}
           {searchResults?.videos && searchResults.videos.length > 0 && (
             <div>
-              <Title level={4}>视频</Title>
-              <List
+              <Title level={4}>视频</Title>              <List
                 dataSource={searchResults.videos}
                 renderItem={(video) => (
-                  <List.Item>
+                  <List.Item
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => {
+                      setPlayUrl(
+                        `http://10.255.253.63:9000/shortvideo/${(video as any).play_url}`
+                      );
+                      setPublisher(video.author?.name || "未知用户");
+                      setDescription(video.title || "暂无描述");
+                      setVideoInfo(video);
+                      setOpenPlayer(true);
+                      setIsModalVisible(false); // 关闭搜索模态框
+                    }}
+                  >
                     <List.Item.Meta
                       avatar={
                         <div style={{ position: 'relative' }}>
@@ -150,7 +169,6 @@ export function MainSearch() {
       ),
     },
   ];
-
   return (
     <>
       <Search
@@ -177,6 +195,25 @@ export function MainSearch() {
           <Tabs defaultActiveKey="all" items={searchTabs} />
         </Spin>
       </Modal>
+
+      {/* 播放器模态框 */}
+      {openPlayer && (
+        <PlayerModal
+          open={openPlayer}
+          onCancel={() => setOpenPlayer(false)}
+          onClose={() => setOpenPlayer(false)}
+          playUrl={playUrl}
+          username={publisher}
+          description={description}
+          videoInfo={videoInfo as SvapiVideo}
+          onLastOne={() => {
+            message.info("已经是第一个了");
+          }}
+          onNextOne={() => {
+            message.info("已经是最后一个了");
+          }}
+        />
+      )}
     </>
   );
 }
