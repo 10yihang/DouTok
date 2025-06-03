@@ -90,9 +90,9 @@ export function VideoList(props: VideoListProps) {
                 } // TODO: 未来整理成读取配置
               >
                 <Meta title={item.title} />
-                <IconText icon={StarOutlined} text="123万" />
-                <IconText icon={LikeOutlined} text="156万" />
-                <IconText icon={MessageOutlined} text="123万" />
+                <IconText icon={StarOutlined} text={item.collectedCount || "0"} />
+                <IconText icon={LikeOutlined} text={item.favoriteCount || "0"} />
+                <IconText icon={MessageOutlined} text={item.commentCount || "0"} />
               </Card>
             </List.Item>
             {openPlayer && (

@@ -11,6 +11,7 @@ import (
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/adapter/svcoreadapter/videooptions"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/utils/claims"
 	"github.com/cloudzenith/DouTok/backend/shortVideoApiService/internal/infrastructure/utils/errorx"
+ 	v1 "github.com/cloudzenith/DouTok/backend/shortVideoCoreService/api/v1"
 	"github.com/go-kratos/kratos/v2/log"
 )
 
@@ -47,9 +48,15 @@ func (a *Application) FeedShortVideo(ctx context.Context, request *svapi.FeedSho
 		return nil, errorx.New(1, "failed to feed short video")
 	}
 
-	videos := dto.ToPBVideoList(resp.Videos)
-	a.videoService.AssembleUserIsFollowing(ctx, videos, userId)
-	a.videoService.AssembleVideoCountInfo(ctx, videos)
+	// 使用完整的 AssembleVideo 方法来确保获取真实的统计数据
+	videos, err := a.videoService.AssembleVideo(ctx, userId, resp.Videos)
+	if err != nil {
+		log.Context(ctx).Warnf("failed to assemble video info: %v", err)
+		// 如果组装失败，使用基础的转换方式
+		videos = dto.ToPBVideoList(resp.Videos)
+		a.videoService.AssembleUserIsFollowing(ctx, videos, userId)
+		a.videoService.AssembleVideoCountInfo(ctx, videos)
+	}
 
 	return &svapi.FeedShortVideoResponse{
 		Videos: videos,
@@ -63,8 +70,25 @@ func (a *Application) GetVideoById(ctx context.Context, request *svapi.GetVideoB
 		return nil, errorx.New(1, "failed to get video by id")
 	}
 
+	// 获取用户ID用于组装视频信息
+	userId := claims.GetUserIdSafely(ctx)
+
+	// 使用AssembleVideo方法确保获取真实的点赞和评论数
+	assembledVideos, err := a.videoService.AssembleVideo(ctx, userId, []*v1.Video{video})
+	if err != nil {
+		log.Context(ctx).Warnf("something wrong in assembling video: %v", err)
+		// 如果组装失败，返回基本信息
+		return &svapi.GetVideoByIdResponse{
+			Video: dto.ToPBVideo(video),
+		}, nil
+	}
+
+	if len(assembledVideos) == 0 {
+		return nil, errorx.New(1, "video not found")
+	}
+
 	return &svapi.GetVideoByIdResponse{
-		Video: dto.ToPBVideo(video),
+		Video: assembledVideos[0],
 	}, nil
 }
 
@@ -191,23 +215,10 @@ func (a *Application) SearchVideo(ctx context.Context, query string, pagination 
 		return nil, err
 	}
 
-	var result []*svapi.Video
-	for _, video := range videoList {
-		result = append(result, &svapi.Video{
-			Id:            video.Id,
-			Title:         video.Title,
-			PlayUrl:       video.PlayUrl,
-			CoverUrl:      video.CoverUrl,
-			FavoriteCount: video.FavoriteCount,
-			CommentCount:  video.CommentCount,
-			IsFavorite:    video.IsFavorite > 0, // 将 int64 转换为 bool
-			Author: &svapi.VideoAuthor{
-				Id:          video.Author.Id,
-				Name:        video.Author.Name,
-				Avatar:      video.Author.Avatar,
-				IsFollowing: video.Author.IsFollowing > 0, // 将 int64 转换为 bool
-			},
-		})
+	// 使用AssembleVideo方法确保获取真实的点赞和评论数
+	result, err := a.videoService.AssembleVideo(ctx, userId, videoList)
+	if err != nil {
+		log.Context(ctx).Warnf("something wrong in assembling videos: %v", err)
 	}
 
 	return result, nil
