@@ -624,8 +624,8 @@ export interface SvapiVideo {
    */
   id?: string;
   author?: SvapiVideoAuthor;
-  playUrl?: string;
-  coverUrl?: string;
+  play_url?: string;
+  cover_url?: string;
   /**
    * @gotags: json:"favoriteCount,omitempty,string"
    */

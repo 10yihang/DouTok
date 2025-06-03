@@ -108,7 +108,7 @@ export function MainSearch() {
                       avatar={
                         <div style={{ position: 'relative' }}>
                           <img
-                            src={video.coverUrl}
+                            src={`http://localhost:9000/shortvideo/${video.cover_url}`}
                             alt={video.title}
                             style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 4 }}
                           />
@@ -129,7 +129,7 @@ export function MainSearch() {
                         <div>
                           <Text>@{video.author?.name}</Text>
                           <br />
-                          <Text type="secondary">点赞: {video.favoriteCount} | 评论: {video.commentCount}</Text>
+                          <Text type="secondary">点赞: {video.favoriteCount || 0} | 评论: {video.commentCount || 0}</Text>
                         </div>
                       }
                     />
