@@ -20,6 +20,9 @@ func TokenParseWhiteList() selector.MatchFunc {
 	whileList["/svapi.UserService/Register"] = struct{}{}
 	whileList["/svapi.UserService/Login"] = struct{}{}
 	whileList["/svapi.SearchService/Search"] = struct{}{}
+	whileList["/svapi.ShortVideoCoreVideoService/FeedShortVideo"] = struct{}{}
+	whileList["/svapi.ShortVideoCoreVideoService/GetShortVideo"] = struct{}{}
+	whileList["/svapi.ShortVideoCoreVideoService/GetShortVideoList"] = struct{}{}
 	return func(ctx context.Context, operation string) bool {
 		if _, ok := whileList[operation]; ok {
 			return false

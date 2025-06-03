@@ -33,6 +33,15 @@ func GetUserId(ctx context.Context) (int64, error) {
 	return claims.UserId, nil
 }
 
+// GetUserIdSafely 安全地获取用户ID，如果没有JWT token则返回0（未登录用户）
+func GetUserIdSafely(ctx context.Context) int64 {
+	userId, err := GetUserId(ctx)
+	if err != nil {
+		return 0 // 未登录用户
+	}
+	return userId
+}
+
 func GenerateToken(claim *Claims) (string, error) {
 	token := jwt5.NewWithClaims(jwt5.SigningMethodHS256, claim)
 	tokenString, err := token.SignedString([]byte("token"))

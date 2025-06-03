@@ -105,7 +105,7 @@ export function LoginComponent(props: LoginComponentProps) {
       {loginType === "email" && (
         <>
           <ProFormText
-            name={"phone"}
+            name={"email"}
             fieldProps={{
               size: "large",
               prefix: <MailOutlined className={"prefixIcon"} />

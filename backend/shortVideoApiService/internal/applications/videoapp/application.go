@@ -33,11 +33,8 @@ func New(
 }
 
 func (a *Application) FeedShortVideo(ctx context.Context, request *svapi.FeedShortVideoRequest) (*svapi.FeedShortVideoResponse, error) {
-	userId, err := claims.GetUserId(ctx)
-	if err != nil {
-		log.Context(ctx).Errorf("failed to get user id from context: %v", err)
-		return nil, errorx.New(1, "failed to get user id from context")
-	}
+	// 获取用户ID，如果没有JWT token则返回0（未登录用户）
+	userId := claims.GetUserIdSafely(ctx)
 
 	var options []videooptions.FeedOptions
 	if request.LatestTime != 0 {
@@ -184,11 +181,8 @@ func (a *Application) PreSign4UploadCover(ctx context.Context, request *svapi.Pr
 }
 
 func (a *Application) SearchVideo(ctx context.Context, query string, pagination *svapi.PaginationRequest) ([]*svapi.Video, error) {
-	// 获取用户ID，如果失败则使用0（未登录用户）
-	userId, err := claims.GetUserId(ctx)
-	if err != nil {
-		userId = 0 // 未登录用户
-	}
+	// 获取用户ID，如果没有JWT token则返回0（未登录用户）
+	userId := claims.GetUserIdSafely(ctx)
 
 	// 调用核心服务搜索视频
 	videoList, err := a.core.SearchVideo(ctx, query, userId, 0, int64(pagination.Size))
