@@ -1,31 +1,46 @@
 version: '3'
 
 networks:
-  total:
+  Doutok:
     driver: bridge
 
 services:
   base-service:
     container_name: base-service
     image: base-service
+    build:
+      context: ..
+      dockerfile: backend/baseService/Dockerfile
+      args:
+        - proxy=${GOPROXY:-https://goproxy.cn,direct}
     volumes:
       - ./configs/baseservice:/app/configs
       - ./entrypoint.sh:/app/entrypoint.sh
     networks:
-      - total
+      - Doutok
 
   sv-core-service:
     container_name: sv-core-service
     image: sv-core-service
+    build:
+      context: ..
+      dockerfile: backend/shortVideoCoreService/Dockerfile
+      args:
+        - proxy=${GOPROXY:-https://goproxy.cn,direct}
     volumes:
       - ./configs/svcoreservice:/app/configs
       - ./entrypoint.sh:/app/entrypoint.sh
     networks:
-      - total
+      - Doutok
 
   sv-api-service:
     container_name: sv-api-service
     image: sv-api-service
+    build:
+      context: ..
+      dockerfile: backend/shortVideoApiService/Dockerfile
+      args:
+        - proxy=${GOPROXY:-https://goproxy.cn,direct}
     volumes:
       - ./configs/svapiservice:/app/configs
       - ./entrypoint.sh:/app/entrypoint.sh
@@ -34,4 +49,4 @@ services:
     ports:
       - "22000:22000"
     networks:
-      - total
+      - Doutok

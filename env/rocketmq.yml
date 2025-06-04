@@ -1,7 +1,7 @@
 version: '3'
 
 networks:
-  total:
+  Doutok:
     driver: bridge
 
 services:
@@ -20,7 +20,7 @@ services:
       - HEAP_NEWSIZE=128M
     command: [ "sh","mqnamesrv" ]
     networks:
-      - total
+      - Doutok
 
   broker:
     image: apache/rocketmq:5.3.0
@@ -43,7 +43,7 @@ services:
       - HEAP_NEWSIZE=256M
     command: ["sh","mqbroker","-c","/home/rocketmq/broker.conf" ]
     networks:
-      - total
+      - Doutok
 
   rmqdashboard:
     image: apacherocketmq/rocketmq-dashboard:latest
@@ -57,4 +57,4 @@ services:
     environment:
       - JAVA_OPTS= -Xmx256M -Xms256M -Xmn128M -Drocketmq.namesrv.addr=rmqnamesrv:9876 -Dcom.rocketmq.sendMessageWithVIPChannel=false
     networks:
-      - total
+      - Doutok

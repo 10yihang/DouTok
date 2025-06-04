@@ -1,17 +1,16 @@
 version: '3'
 
 networks:
-  total:
+  Doutok:
     driver: bridge
 
 services:
   mysql:
     image: mysql:8.0
-    container_name: mysql
     env_file:
       - ./mysql/.env
     networks:
-      - total
+      - Doutok
     volumes:
         - ./mysql_data:/var/lib/mysql:rw
         - ./mysql/my.cnf:/etc/mysql/my.cnf
@@ -25,10 +24,9 @@ services:
 
   redis:
     image: redis:latest
-    container_name: redis
     command: redis-server /etc/redis/redis.conf
     networks:
-      - total
+      - Doutok
     volumes:
       - ./redis_data:/data
       - ./redis/redis.conf:/etc/redis/redis.conf
@@ -42,9 +40,8 @@ services:
 
   etcd:
     image: bitnami/etcd
-    container_name: etcd
     networks:
-      - total
+      - Doutok
     environment:
       - ALLOW_NONE_AUTHENTICATION=yes
       - ETCD_NAME=etcd
@@ -58,7 +55,6 @@ services:
 
   minio:
     image: minio/minio:latest
-    container_name: minio
     command: server --console-address ':9001' /data
     ports:
       - "9000:9000"
@@ -70,15 +66,14 @@ services:
       - ./minio_data:/data
       - ./minio:/root/.minio
     networks:
-      - total
+      - Doutok
     privileged: true
     restart: always
 
   consul:
-    container_name: consul
     image: hashicorp/consul:1.15.4
     networks:
-      - total
+      - Doutok
     ports:
       - "8500:8500"
     volumes:
@@ -100,10 +95,9 @@ services:
 
   gorse:
     image: zhenghaoz/gorse-in-one:latest
-    container_name: gorse
     restart: unless-stopped
     networks:
-      - total
+      - Doutok
     ports:
       - 8086:8086   # gRPC port
       - 8088:8088   # HTTP port

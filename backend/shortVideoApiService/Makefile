@@ -17,7 +17,7 @@ build:
 	docker build -t sv-api-service .
 
 build1:
-	 docker build --build-arg proxy="https://goproxy.cn" -t sv-api-service .
+	 docker build --build-arg proxy="https://goproxy.cn,direct" -t sv-api-service .
 
 wire:
 	cd ./internal/server && wire

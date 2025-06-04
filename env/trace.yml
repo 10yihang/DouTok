@@ -1,13 +1,12 @@
 version: "3"
 
 networks:
-  total:
+  Doutok:
     driver: bridge
 
 services:
   loki:
     image: grafana/loki:2.9.0
-    container_name: loki
     ports:
       - "3100:3100"
       - "9095:9095"
@@ -17,11 +16,10 @@ services:
     user: root
     command: -config.file=/etc/loki/local-config.yaml
     networks:
-      - total
+      - Doutok
 
   promtail:
     image: grafana/promtail:2.9.0
-    container_name: promtail
     ports:
       - "9080:9080"
     volumes:
@@ -35,23 +33,21 @@ services:
           memory: 200M
     command: [ "-config.file=/promtail-config.yaml" ]
     networks:
-      - total
+      - Doutok
 
   grafana:
     image: grafana/grafana:9.5.18
     restart: "always"
     ports:
       - 3000:3000
-    container_name: "grafana"
     volumes:
 #      - "./grafana/grafana.ini:/etc/grafana/grafana.ini"
       - "./grafana/grafana-storage:/var/lib/grafana"
     networks:
-      - total
+      - Doutok
 
   tempo:
     image: grafana/tempo:latest
-    container_name: tempo
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./tempo/tempo.yaml:/etc/tempo.yaml
@@ -63,10 +59,9 @@ services:
       - "4318"  # otlp http
       - "9411"   # zipkin
     networks:
-      - total
+      - Doutok
 
   otel:
-    container_name: otel
     image: otel/opentelemetry-collector:latest
     command: [ "--config=/etc/otel-collector-config.yml", "${OTELCOL_ARGS}" ]
     volumes:
@@ -79,11 +74,10 @@ services:
       - "4317:4317"   # OTLP gRPC receiver
       - "55670:55679" # zpages extension
     networks:
-      - total
+      - Doutok
 
   prometheus:
     image: prom/prometheus:latest
-    container_name: prometheus
     command:
       - --config.file=/etc/prometheus.yaml
       - --web.enable-remote-write-receiver
@@ -94,10 +88,9 @@ services:
     ports:
       - "9090:9090"
     networks:
-      - total
+      - Doutok
 
   jaeger:
-    container_name: jaeger
     image: jaegertracing/all-in-one:latest
     environment:
       - COLLECTOR_ZIPKIN_HTTP_PORT=9411
@@ -114,4 +107,4 @@ services:
       - ./jaeger_data:/var/lib/jaeger
       - ./jaeger_config:/etc/jaeger
     networks:
-      - total
+      - Doutok

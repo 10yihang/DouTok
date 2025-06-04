@@ -1,24 +1,30 @@
 FROM golang:1.22-alpine AS builder
 
-WORKDIR /build
+WORKDIR /build/backend/baseService
 
-ARG proxy=https://proxy.golang.org
+ARG proxy=https://goproxy.cn,direct
 ENV proxy=$proxy
 RUN echo "proxy: $proxy"
 
 ENV GOPROXY=${proxy}
 
-COPY go.mod .
+# 复制 go.mod 和 go.sum
+COPY backend/baseService/go.mod backend/baseService/go.sum ./
+COPY backend/gopkgs/go.mod backend/gopkgs/go.sum ../gopkgs/
+
 RUN go mod download
 
-COPY . .
+# 复制所有需要的源代码
+COPY backend/baseService .
+COPY backend/gopkgs ../gopkgs
+
 RUN CGO_ENABLED=0 GOARCH=amd64 GOOS=linux go build -ldflags "-X google.golang.org/protobuf/reflect/protoregistry.conflictPolicy=warn" -a -o serve ./cmd/
 
 FROM golang:1.22-alpine AS promtail-builder
 
 WORKDIR /build
 
-ARG proxy=https://proxy.golang.org
+ARG proxy=https://goproxy.cn,direct
 ENV proxy=$proxy
 RUN echo "proxy: $proxy"
 
@@ -40,10 +46,10 @@ RUN mkdir tmp
 RUN mkdir logs
 RUN mkdir configs
 
-COPY --from=builder /build/serve /app/serve
-COPY ./configs /app/configs
-COPY ./entrypoint.sh /app/entrypoint.sh
-COPY ./promtail.yaml /app/promtail.yaml
+COPY --from=builder /build/backend/baseService/serve /app/serve
+COPY backend/baseService/configs /app/configs
+COPY env/entrypoint.sh /app/entrypoint.sh
+COPY backend/baseService/promtail.yaml /app/promtail.yaml
 
 COPY --from=promtail-builder /build/loki-3.1.1/promtail /app/promtail
 

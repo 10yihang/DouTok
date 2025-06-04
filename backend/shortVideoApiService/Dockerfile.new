@@ -1,6 +1,6 @@
 FROM golang:1.22-alpine AS builder
 
-WORKDIR /build/backend/shortVideoCoreService
+WORKDIR /build/backend/shortVideoApiService
 
 ARG proxy=https://goproxy.cn,direct
 ENV proxy=$proxy
@@ -9,14 +9,18 @@ RUN echo "proxy: $proxy"
 ENV GOPROXY=${proxy}
 
 # 复制 go.mod 和 go.sum
-COPY backend/shortVideoCoreService/go.mod backend/shortVideoCoreService/go.sum ./
+COPY backend/shortVideoApiService/go.mod backend/shortVideoApiService/go.sum ./
+
+# 复制依赖模块的 go.mod 和 go.sum 到正确的相对路径位置
+COPY backend/shortVideoCoreService/go.mod backend/shortVideoCoreService/go.sum ../shortVideoCoreService/
 COPY backend/gopkgs/go.mod backend/gopkgs/go.sum ../gopkgs/
 COPY backend/baseService/go.mod backend/baseService/go.sum ../baseService/
 
 RUN go mod download
 
-# 复制所有需要的源代码
-COPY backend/shortVideoCoreService .
+# 复制所有源代码
+COPY backend/shortVideoApiService .
+COPY backend/shortVideoCoreService ../shortVideoCoreService
 COPY backend/gopkgs ../gopkgs
 COPY backend/baseService ../baseService
 
@@ -48,11 +52,14 @@ RUN mkdir tmp
 RUN mkdir logs
 RUN mkdir configs
 
-COPY --from=builder /build/backend/shortVideoCoreService/serve /app/serve
-COPY backend/shortVideoCoreService/configs /app/configs
+COPY --from=builder /build/backend/shortVideoApiService/serve /app/serve
+COPY backend/shortVideoApiService/configs /app/configs
 COPY env/entrypoint.sh /app/entrypoint.sh
-COPY backend/shortVideoCoreService/promtail.yaml /app/promtail.yaml
+COPY backend/shortVideoApiService/promtail.yaml /app/promtail.yaml
 
 COPY --from=promtail-builder /build/loki-3.1.1/promtail /app/promtail
+
+RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc
+RUN chmod -R 777 mc
 
 ENTRYPOINT ["./entrypoint.sh"]
