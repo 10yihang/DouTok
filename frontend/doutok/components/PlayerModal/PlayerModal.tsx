@@ -53,9 +53,9 @@ export function CorePlayerModal(props: PlayerModalProps) {
         }
       >
         <Player
-          src={"http://10.255.253.63:9000/shortvideo/" + videoInfo.play_url}
+          src={"http://localhost:9000/shortvideo/" + videoInfo.play_url}
           avatar={
-            "http://10.255.253.63:9000/shortvideo/" + videoInfo.author?.avatar
+            "http://localhost:9000/shortvideo/" + videoInfo.author?.avatar
           }
           username={videoInfo?.author?.name}
           description={videoInfo.title}

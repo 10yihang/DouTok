@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev -p 23000",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 4000",
     "lint": "next lint",
     "gen-svapi": "restful-react import --file ../../backend/shortVideoApiService/openapi.yaml --output ./api/svapi/api.tsx && prettier ./api/svapi/api.tsx --write",
     "test": "next test",

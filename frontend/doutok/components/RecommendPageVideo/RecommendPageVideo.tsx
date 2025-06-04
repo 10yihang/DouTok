@@ -82,8 +82,8 @@ export function RecommendPageVideo(props: RecommendPageVideoProps) {
             display: current === index ? "block" : "none"
           }}
         >          <Player
-            src={"http://10.255.253.63:9000/shortvideo/" + item.play_url}
-            avatar={"http://10.255.253.63:9000/shortvideo/" + item.author?.avatar}
+            src={"http://localhost:9000/shortvideo/" + item.play_url}
+            avatar={"http://localhost:9000/shortvideo/" + item.author?.avatar}
             username={item.author?.name}
             description={item.title}
             title={"test"}

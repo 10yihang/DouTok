@@ -114,7 +114,7 @@ export function MainSearch() {
                     style={{ cursor: 'pointer' }}
                     onClick={() => {
                       setPlayUrl(
-                        `http://10.255.253.63:9000/shortvideo/${(video as any).play_url}`
+                        `http://localhost:9000/shortvideo/${(video as any).play_url}`
                       );
                       setPublisher(video.author?.name || "未知用户");
                       setDescription(video.title || "暂无描述");

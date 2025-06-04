@@ -53,7 +53,7 @@ export function UserCard() {
 
       // TODO: 暂时写死，未来整理成读取配置
       const newAvatar = data.user?.avatar !== undefined
-        ? "http://10.255.253.63:9000/shortvideo/" + data.user.avatar
+        ? "http://localhost:9000/shortvideo/" + data.user.avatar
         : "no-login.svg";
       setAvatar(newAvatar);
       setAvatarState(newAvatar);
@@ -89,7 +89,7 @@ export function UserCard() {
           description: "头像上传成功"
         });
         // 更新全局状态
-        const newAvatar = "http://10.255.253.63:9000/shortvideo/" + avatarObjectName;
+        const newAvatar = "http://localhost:9000/shortvideo/" + avatarObjectName;
         setAvatar(newAvatar);
         setAvatarState(newAvatar);
       });

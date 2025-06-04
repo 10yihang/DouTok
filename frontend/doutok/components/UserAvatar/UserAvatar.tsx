@@ -33,7 +33,7 @@ export function UserAvatar() {
       // TODO: 暂时写死，未来整理成读取配置
       setAvatar(
         data.user?.avatar !== undefined
-          ? "http://10.255.253.63:9000/shortvideo/" + data.user.avatar
+          ? "http://localhost:9000/shortvideo/" + data.user.avatar
           : "no-login.svg"
       );
       setCurrentUserId(data.user?.id);

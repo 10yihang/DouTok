@@ -184,7 +184,7 @@ export function CommentComponent(props: CommentListProps) {
                       avatar={
                         <Avatar
                           src={
-                            "http://10.255.253.63:9000/shortvideo/" +
+                            "http://localhost:9000/shortvideo/" +
                             item.user?.avatar
                           }
                         />
