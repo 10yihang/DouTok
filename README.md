@@ -12,7 +12,6 @@ DouTok/
 ├── sql/             # 数据库初始化和迁移脚本
 ├── imgs/            # 项目相关的图片资源
 ├── grafana.ini      # Grafana 配置文件
-├── LICENSE          # 项目许可证
 └── README.md        # 项目主 README
 ```
 
@@ -28,11 +27,3 @@ DouTok/
 
 *   [后端 README](./backend/README.md)
 *   [前端 README](./frontend/README.md)
-
-## 贡献
-
-欢迎为此项目做出贡献！请随时提交 Pull Request 或创建 Issue。
-
-## 许可证
-
-该项目根据 [LICENSE](./LICENSE) 文件中的条款获得许可。

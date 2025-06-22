@@ -73,7 +73,7 @@ export function VideoList(props: VideoListProps) {
               <Card
                 onClick={() => {
                   setPlayUrl(
-                    "http://localhost:9000/shortvideo/" + item.play_url
+                    "http://10.255.253.63:9000/shortvideo/" + item.play_url
                   );
                   setPublisher(item.author?.name || "未知用户");
                   setDescription(item.title || "暂无描述");
@@ -84,7 +84,7 @@ export function VideoList(props: VideoListProps) {
                 hoverable={true}
                 cover={
                   <Image
-                    src={"http://localhost:9000/shortvideo/" + item.cover_url}
+                    src={"http://10.255.253.63:9000/shortvideo/" + item.cover_url}
                     preview={false}
                   />
                 } // TODO: 未来整理成读取配置

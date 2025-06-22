@@ -9,6 +9,8 @@ services:
     image: mysql:8.0
     env_file:
       - ./mysql/.env
+    privileged:
+      true
     networks:
       - Doutok
     volumes:

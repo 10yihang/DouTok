@@ -16,7 +16,7 @@ export function RequestComponent(props: RequestProps) {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     //@ts-ignore
     <RestfulProvider
-      base={"http://localhost:22000"}
+      base={"http://10.255.253.63:22000"}
       resolve={async res => {
         return res;
       }}

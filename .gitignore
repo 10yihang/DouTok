@@ -46,3 +46,7 @@ env/redis_data
 env/minio_data
 env/grafana
 
+README.md
+
+*.log
+*.log*
